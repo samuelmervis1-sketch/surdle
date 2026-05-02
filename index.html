@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DailySurdle — Daily Science Challenge</title>
+  <meta name="description" content="Solve daily physics, chemistry, and biology puzzles. One new question per subject every day, with hints and difficulty ratings.">
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://dailysurdle.netlify.app/">
+  <meta property="og:title" content="DailySurdle — Daily Science Challenge">
+  <meta property="og:description" content="Solve daily physics, chemistry, and biology puzzles. One new question per subject every day, with hints and difficulty ratings.">
+  <meta property="og:image" content="https://dailysurdle.netlify.app/og-image.svg">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="DailySurdle — Daily Science Challenge">
+  <meta name="twitter:description" content="Solve daily physics, chemistry, and biology puzzles. One new question per subject every day, with hints and difficulty ratings.">
+  <meta name="twitter:image" content="https://dailysurdle.netlify.app/og-image.svg">
+
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="style.css?v=4">
+</head>
+<body class="home-page">
+  <header>
+    <button class="how-to-play-btn" id="htp-btn" aria-label="How to play">?</button>
+    <a href="archive.html" class="header-archive-link">Archive</a>
+    <h1>DailySurdle</h1>
+    <p class="subtitle">Daily Science Challenge</p>
+  </header>
+
+  <main>
+    <div class="games-grid">
+      <div class="game-tile" data-subject="physics">
+        <div class="game-tile-icon">⚡</div>
+        <div class="game-tile-info">
+          <h2>Daily Physics</h2>
+          <p class="game-desc">Mechanics &amp; Motion</p>
+        </div>
+        <a href="physics.html" class="play-btn">Play</a>
+      </div>
+
+      <div class="game-tile" data-subject="chemistry">
+        <div class="game-tile-icon">⚗️</div>
+        <div class="game-tile-info">
+          <h2>Daily Chemistry</h2>
+          <p class="game-desc">Reactions &amp; Elements</p>
+        </div>
+        <a href="chemistry.html" class="play-btn">Play</a>
+      </div>
+
+      <div class="game-tile" data-subject="biology">
+        <div class="game-tile-icon">🧬</div>
+        <div class="game-tile-info">
+          <h2>Daily Biology</h2>
+          <p class="game-desc">Cells &amp; Life</p>
+        </div>
+        <a href="biology.html" class="play-btn">Play</a>
+      </div>
+    </div>
+
+    <p class="countdown-label">Next puzzle unlocks in: <span id="countdown">--:--:--</span></p>
+  </main>
+
+  <div id="htp-modal" class="modal-backdrop" role="dialog" aria-modal="true" aria-label="How to play">
+    <div class="modal">
+      <div class="modal-header">
+        <span class="modal-date-label">How to Play</span>
+        <button id="htp-close" class="modal-close" aria-label="Close">✕</button>
+      </div>
+      <div class="htp-section">
+        <h3>Daily Puzzles</h3>
+        <p>A new physics, chemistry, and biology question unlocks each day at midnight. Solve all three for a full set.</p>
+      </div>
+      <div class="htp-section">
+        <h3>Difficulty</h3>
+        <p>Each puzzle is tagged <span class="difficulty-badge difficulty-badge--easy">easy</span>, <span class="difficulty-badge difficulty-badge--medium">medium</span>, or <span class="difficulty-badge difficulty-badge--hard">hard</span> — determined by the date, so it rotates automatically.</p>
+      </div>
+      <div class="htp-section">
+        <h3>Hints</h3>
+        <p>Stuck? Use up to 3 progressive hints. Each one narrows in on the answer without giving it away.</p>
+      </div>
+      <div class="htp-section">
+        <h3>Archive</h3>
+        <p>Browse and replay the past 30 days of puzzles. Your solved status is saved in your browser.</p>
+      </div>
+      <div class="htp-section">
+        <h3>Example</h3>
+        <div class="htp-example">
+          <p>What is the chemical formula for water?</p>
+          <div class="htp-option">A)  CO₂</div>
+          <div class="htp-option htp-option--correct">B)  H₂O ✓</div>
+          <div class="htp-option">C)  NaCl</div>
+          <div class="htp-option">D)  O₂</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="physics-data.js?v=3"></script>
+  <script src="chemistry-data.js?v=3"></script>
+  <script src="biology-data.js?v=3"></script>
+  <script src="script.js?v=3"></script>
+</body>
+</html>

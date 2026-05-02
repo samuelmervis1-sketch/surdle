@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Daily Physics — DailySurdle</title>
+  <meta name="description" content="Today's daily physics puzzle on DailySurdle. Test your knowledge of mechanics, motion, forces, and energy.">
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://dailysurdle.netlify.app/physics.html">
+  <meta property="og:title" content="Daily Physics — DailySurdle">
+  <meta property="og:description" content="Today's daily physics puzzle. Test your knowledge of mechanics, motion, forces, and energy.">
+  <meta property="og:image" content="https://dailysurdle.netlify.app/og-image.svg">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Daily Physics — DailySurdle">
+  <meta name="twitter:description" content="Today's daily physics puzzle. Test your knowledge of mechanics, motion, forces, and energy.">
+  <meta name="twitter:image" content="https://dailysurdle.netlify.app/og-image.svg">
+
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="style.css?v=4">
+</head>
+<body>
+  <header>
+    <button class="how-to-play-btn" id="htp-btn" aria-label="How to play">?</button>
+    <a href="archive.html" class="header-archive-link">Archive</a>
+    <h1>Daily Physics</h1>
+    <p class="subtitle">Mechanics &amp; Motion</p>
+  </header>
+
+  <main>
+    <a href="index.html" class="back-link">← Back to Home</a>
+
+    <div class="game-container">
+      <div id="game-loading" class="spinner"></div>
+      <p id="question" hidden></p>
+      <div id="simulation-area" hidden></div>
+      <div id="options"></div>
+      <button id="hint-btn" class="hint-btn" hidden>Show Hint (1/3)</button>
+      <div id="hint-box" class="hint-box" hidden></div>
+      <button id="submit-btn" hidden>Submit Answer</button>
+      <div id="result" hidden></div>
+    </div>
+  </main>
+
+  <div id="htp-modal" class="modal-backdrop" role="dialog" aria-modal="true" aria-label="How to play">
+    <div class="modal">
+      <div class="modal-header">
+        <span class="modal-date-label">How to Play</span>
+        <button id="htp-close" class="modal-close" aria-label="Close">✕</button>
+      </div>
+      <div class="htp-section">
+        <h3>Daily Puzzles</h3>
+        <p>A new physics, chemistry, and biology question unlocks each day at midnight. Solve all three for a full set.</p>
+      </div>
+      <div class="htp-section">
+        <h3>Difficulty</h3>
+        <p>Each puzzle is tagged <span class="difficulty-badge difficulty-badge--easy">easy</span>, <span class="difficulty-badge difficulty-badge--medium">medium</span>, or <span class="difficulty-badge difficulty-badge--hard">hard</span> — determined by the date, so it rotates automatically.</p>
+      </div>
+      <div class="htp-section">
+        <h3>Hints</h3>
+        <p>Stuck? Use up to 3 progressive hints. Each one narrows in on the answer without giving it away.</p>
+      </div>
+      <div class="htp-section">
+        <h3>Archive</h3>
+        <p>Browse and replay the past 30 days of puzzles. Your solved status is saved in your browser.</p>
+      </div>
+      <div class="htp-section">
+        <h3>Example</h3>
+        <div class="htp-example">
+          <p>What is the chemical formula for water?</p>
+          <div class="htp-option">A)  CO₂</div>
+          <div class="htp-option htp-option--correct">B)  H₂O ✓</div>
+          <div class="htp-option">C)  NaCl</div>
+          <div class="htp-option">D)  O₂</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="physics-data.js?v=3"></script>
+  <script src="script.js?v=3"></script>
+</body>
+</html>

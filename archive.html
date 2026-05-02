@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Archive — DailySurdle</title>
+  <meta name="description" content="Browse and replay the past 30 days of DailySurdle puzzles across physics, chemistry, and biology.">
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://dailysurdle.netlify.app/archive.html">
+  <meta property="og:title" content="Archive — DailySurdle">
+  <meta property="og:description" content="Browse and replay the past 30 days of DailySurdle puzzles across physics, chemistry, and biology.">
+  <meta property="og:image" content="https://dailysurdle.netlify.app/og-image.svg">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Archive — DailySurdle">
+  <meta name="twitter:description" content="Browse and replay the past 30 days of DailySurdle puzzles across physics, chemistry, and biology.">
+  <meta name="twitter:image" content="https://dailysurdle.netlify.app/og-image.svg">
+
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="style.css?v=4">
+</head>
+<body>
+  <header>
+    <button class="how-to-play-btn" id="htp-btn" aria-label="How to play">?</button>
+    <a href="index.html" class="header-archive-link">← Home</a>
+    <h1>Archive</h1>
+    <p class="subtitle">Past Puzzles</p>
+  </header>
+
+  <main>
+    <div class="tabs">
+      <button class="tab active" data-subject="physics">⚡ Physics</button>
+      <button class="tab" data-subject="chemistry">⚗️ Chemistry</button>
+      <button class="tab" data-subject="biology">🧬 Biology</button>
+    </div>
+
+    <ul id="archive-list" class="archive-list"></ul>
+  </main>
+
+  <!-- Replay modal -->
+  <div id="puzzle-modal" class="modal-backdrop">
+    <div class="modal" role="dialog" aria-modal="true">
+      <div class="modal-header">
+        <span id="modal-date" class="modal-date-label"></span>
+        <button id="modal-close" class="modal-close" aria-label="Close">✕</button>
+      </div>
+      <p id="question"></p>
+      <div id="diagram-area" hidden></div>
+      <div id="simulation-area" hidden></div>
+      <div id="options"></div>
+      <button id="hint-btn" class="hint-btn">Show Hint (1/3)</button>
+      <div id="hint-box" class="hint-box" hidden></div>
+      <div id="diagram-labels" hidden></div>
+      <button id="submit-btn">Submit Answer</button>
+      <div id="result" hidden></div>
+    </div>
+  </div>
+
+  <div id="htp-modal" class="modal-backdrop" role="dialog" aria-modal="true" aria-label="How to play">
+    <div class="modal">
+      <div class="modal-header">
+        <span class="modal-date-label">How to Play</span>
+        <button id="htp-close" class="modal-close" aria-label="Close">✕</button>
+      </div>
+      <div class="htp-section">
+        <h3>Daily Puzzles</h3>
+        <p>A new physics, chemistry, and biology question unlocks each day at midnight. Solve all three for a full set.</p>
+      </div>
+      <div class="htp-section">
+        <h3>Difficulty</h3>
+        <p>Each puzzle is tagged <span class="difficulty-badge difficulty-badge--easy">easy</span>, <span class="difficulty-badge difficulty-badge--medium">medium</span>, or <span class="difficulty-badge difficulty-badge--hard">hard</span> — determined by the date, so it rotates automatically.</p>
+      </div>
+      <div class="htp-section">
+        <h3>Hints</h3>
+        <p>Stuck? Use up to 3 progressive hints. Each one narrows in on the answer without giving it away.</p>
+      </div>
+      <div class="htp-section">
+        <h3>Archive</h3>
+        <p>Browse and replay the past 30 days of puzzles. Your solved status is saved in your browser.</p>
+      </div>
+      <div class="htp-section">
+        <h3>Example</h3>
+        <div class="htp-example">
+          <p>What is the chemical formula for water?</p>
+          <div class="htp-option">A)  CO₂</div>
+          <div class="htp-option htp-option--correct">B)  H₂O ✓</div>
+          <div class="htp-option">C)  NaCl</div>
+          <div class="htp-option">D)  O₂</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="physics-data.js?v=3"></script>
+  <script src="chemistry-data.js?v=3"></script>
+  <script src="biology-data.js?v=3"></script>
+  <script src="archive.js?v=3"></script>
+</body>
+</html>
