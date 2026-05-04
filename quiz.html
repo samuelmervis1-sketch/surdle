@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quiz Mode — DailySurdle</title>
+  <meta name="description" content="10-question science quizzes at your own pace. Choose subject and difficulty, use hints, and get graded.">
+
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://dailysurdle.netlify.app/quiz.html">
+  <meta property="og:title" content="Quiz Mode — DailySurdle">
+  <meta property="og:description" content="10-question science quizzes at your own pace.">
+  <meta property="og:image" content="https://dailysurdle.netlify.app/og-image.svg">
+
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="style.css?v=9">
+</head>
+<body class="quiz-page">
+
+  <header class="quiz-header-bar">
+    <a href="index.html" class="quiz-back-link">← Home</a>
+    <span class="quiz-header-title" id="quiz-header-title"></span>
+  </header>
+
+  <!-- ===== SETUP SCREEN ===== -->
+  <div id="quiz-setup" class="quiz-screen">
+    <div class="quiz-screen-inner">
+      <div class="quiz-setup-icon">📝</div>
+      <h1 class="quiz-setup-title">Quiz Mode</h1>
+      <p class="quiz-setup-sub">10 questions · No time pressure · Hints available</p>
+
+      <!-- Subject -->
+      <div class="quiz-setup-group">
+        <div class="quiz-setup-label">Subject</div>
+        <div class="quiz-pick-row" id="subject-picker">
+          <button class="quiz-pick-btn quiz-pick-btn--active" data-subject="mixed">🔀 Mixed</button>
+          <button class="quiz-pick-btn" data-subject="physics">⚡ Physics</button>
+          <button class="quiz-pick-btn" data-subject="chemistry">⚗️ Chemistry</button>
+          <button class="quiz-pick-btn" data-subject="biology">🧬 Biology</button>
+        </div>
+      </div>
+
+      <!-- Difficulty -->
+      <div class="quiz-setup-group">
+        <div class="quiz-setup-label">Difficulty</div>
+        <div class="quiz-diff-row" id="diff-picker">
+          <button class="quiz-diff-btn" data-diff="beginner">
+            <span class="quiz-diff-name">Beginner</span>
+            <span class="quiz-diff-sub">High school entry level</span>
+          </button>
+          <button class="quiz-diff-btn quiz-diff-btn--active" data-diff="easy">
+            <span class="quiz-diff-name">Easy</span>
+            <span class="quiz-diff-sub">High school standard</span>
+          </button>
+          <button class="quiz-diff-btn" data-diff="medium">
+            <span class="quiz-diff-name">Medium</span>
+            <span class="quiz-diff-sub">High school advanced / University intro</span>
+          </button>
+          <button class="quiz-diff-btn" data-diff="hard">
+            <span class="quiz-diff-name">Hard</span>
+            <span class="quiz-diff-sub">University advanced / Expert level</span>
+          </button>
+        </div>
+      </div>
+
+      <button class="quiz-start-btn" id="quiz-start-btn">Start Quiz →</button>
+    </div>
+  </div>
+
+  <!-- ===== GAME SCREEN ===== -->
+  <div id="quiz-game" class="quiz-screen" hidden>
+    <div class="quiz-screen-inner">
+
+      <!-- Top bar -->
+      <div class="quiz-top-bar">
+        <div class="quiz-progress-wrap">
+          <div class="quiz-progress-track"><div class="quiz-progress-fill" id="quiz-progress-fill"></div></div>
+          <span class="quiz-q-counter" id="quiz-q-counter">Question 1 of 10</span>
+        </div>
+        <span class="quiz-score-live" id="quiz-score-live"></span>
+      </div>
+
+      <!-- Question card -->
+      <div class="quiz-question-card" id="quiz-question-card">
+        <p class="quiz-question-text" id="quiz-question-text"></p>
+        <div class="quiz-options" id="quiz-options"></div>
+        <div class="quiz-feedback" id="quiz-feedback" hidden></div>
+      </div>
+
+      <!-- Hint area -->
+      <div class="quiz-hint-area">
+        <button class="quiz-hint-btn" id="quiz-hint-btn">💡 Hint <span class="quiz-hint-cost">(−1 pt)</span></button>
+        <div class="quiz-hints-shown" id="quiz-hints-shown"></div>
+      </div>
+
+      <!-- Next button -->
+      <button class="quiz-next-btn" id="quiz-next-btn" hidden>Next Question →</button>
+
+    </div>
+  </div>
+
+  <!-- ===== RESULTS SCREEN ===== -->
+  <div id="quiz-results" class="quiz-screen" hidden>
+    <div class="quiz-screen-inner quiz-results-inner">
+
+      <div class="quiz-grade-circle" id="quiz-grade-circle">A</div>
+      <h2 class="quiz-results-score" id="quiz-results-score">8/10 — 80%</h2>
+      <p class="quiz-results-label" id="quiz-results-label">Great work! 👏</p>
+
+      <div class="quiz-results-summary">
+        <div class="quiz-summary-row">
+          <span>Correct answers</span><strong id="res-raw">—</strong>
+        </div>
+        <div class="quiz-summary-row">
+          <span>Hints used</span><strong id="res-hints">—</strong>
+        </div>
+        <div class="quiz-summary-row quiz-summary-row--final">
+          <span>Final score</span><strong id="res-adjusted">—</strong>
+        </div>
+      </div>
+
+      <div class="quiz-breakdown-section">
+        <h3 class="quiz-breakdown-title">Question Breakdown</h3>
+        <div id="quiz-breakdown"></div>
+      </div>
+
+      <div class="quiz-results-actions">
+        <button class="quiz-start-btn quiz-retake-btn" id="quiz-retake-btn">↩ Retake Quiz</button>
+        <a href="index.html" class="quiz-home-link">← Back to Home</a>
+      </div>
+
+    </div>
+  </div>
+
+  <script src="physics-data.js?v=5"></script>
+  <script src="chemistry-data.js?v=6"></script>
+  <script src="biology-data.js?v=5"></script>
+  <script src="quiz.js?v=1"></script>
+</body>
+</html>

@@ -14,7 +14,7 @@
   <meta property="og:image" content="https://dailysurdle.netlify.app/og-image.svg">
 
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="style.css?v=8">
+  <link rel="stylesheet" href="style.css?v=9">
 </head>
 <body class="stats-page">
   <header>
@@ -68,6 +68,25 @@
       <div id="diff-bars" class="stat-bars"></div>
     </section>
 
+    <!-- Quiz Stats -->
+    <section class="stats-section">
+      <h2 class="stats-section-title">Quiz Stats</h2>
+      <div class="quiz-stats-grid">
+        <div class="stat-card">
+          <div class="stat-card-num" id="stat-quiz-total">0</div>
+          <div class="stat-card-lbl">Quizzes Taken</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-card-num" id="stat-quiz-best">—</div>
+          <div class="stat-card-lbl">Best Score</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-card-num" id="stat-quiz-avg">—</div>
+          <div class="stat-card-lbl">Avg Score</div>
+        </div>
+      </div>
+    </section>
+
     <!-- All-time leaderboard -->
     <section class="stats-section">
       <h2 class="stats-section-title">All-Time Leaderboard</h2>
@@ -102,6 +121,6 @@
 
   </main>
 
-  <script src="stats.js?v=2"></script>
+  <script src="stats.js?v=3"></script>
 </body>
 </html>

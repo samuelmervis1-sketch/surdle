@@ -8,7 +8,8 @@ function getStats() {
     lastSolvedDate: null,
     bySubject: { physics: 0, chemistry: 0, biology: 0 },
     byDifficulty: { beginner: 0, easy: 0, medium: 0, hard: 0 },
-    firstTryWins: 0
+    firstTryWins: 0,
+    quizzesTaken: 0, quizBestPct: 0, quizTotalCorrect: 0, quizTotalAnswered: 0
   };
   if (!raw) return defaults;
   try {
@@ -115,6 +116,19 @@ function getPrevDay(dateStr) {
     { label: 'Hard',     value: diff.hard     || 0, max: maxDiff || 1, color: '#d95f5f' },
   ]);
 
+  // ---- Quiz stats ----
+  const quizTotalEl = document.getElementById('stat-quiz-total');
+  const quizBestEl  = document.getElementById('stat-quiz-best');
+  const quizAvgEl   = document.getElementById('stat-quiz-avg');
+
+  if (quizTotalEl) quizTotalEl.textContent = stats.quizzesTaken || 0;
+  if (quizBestEl)  quizBestEl.textContent  = stats.quizzesTaken ? (stats.quizBestPct || 0) + '%' : '—';
+  if (quizAvgEl) {
+    const avg = stats.quizTotalAnswered > 0
+      ? Math.round((stats.quizTotalCorrect / stats.quizTotalAnswered) * 100) : null;
+    quizAvgEl.textContent = avg !== null ? avg + '%' : '—';
+  }
+
   // ---- Reset button ----
   const resetBtn        = document.getElementById('reset-btn');
   const resetConfirm    = document.getElementById('reset-confirm');
@@ -139,7 +153,8 @@ function getPrevDay(dateStr) {
         totalSolved: 0, currentStreak: 0, bestStreak: 0, lastSolvedDate: null,
         bySubject:    { physics: 0, chemistry: 0, biology: 0 },
         byDifficulty: { beginner: 0, easy: 0, medium: 0, hard: 0 },
-        firstTryWins: 0
+        firstTryWins: 0,
+        quizzesTaken: 0, quizBestPct: 0, quizTotalCorrect: 0, quizTotalAnswered: 0
       });
       window.location.reload();
     });
