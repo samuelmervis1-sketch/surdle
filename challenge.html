@@ -4,24 +4,23 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Timed Challenge — DailySurdle</title>
-  <meta name="description" content="Race the clock: answer as many science questions as you can in 5 minutes.">
+  <meta name="description" content="Race the clock: answer as many science questions as you can in 1 minute.">
 
-  <!-- Open Graph -->
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://dailysurdle.netlify.app/challenge.html">
   <meta property="og:title" content="Timed Challenge — DailySurdle">
-  <meta property="og:description" content="Race the clock: answer as many science questions as you can in 5 minutes.">
+  <meta property="og:description" content="Race the clock: answer as many science questions as you can in 1 minute.">
   <meta property="og:image" content="https://dailysurdle.netlify.app/og-image.svg">
 
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="style.css?v=7">
+  <link rel="stylesheet" href="style.css?v=8">
 </head>
 <body class="challenge-page">
 
   <header class="challenge-header-bar">
     <a href="index.html" class="challenge-back-link">← Home</a>
     <div class="challenge-live-stats" id="challenge-live-stats" hidden>
-      <span class="challenge-timer" id="challenge-timer">5:00 ⏱️</span>
+      <span class="challenge-timer" id="challenge-timer">1:00 ⏱️</span>
       <span class="challenge-score" id="challenge-score">Score: 0 ✓</span>
     </div>
   </header>
@@ -30,14 +29,27 @@
   <div id="challenge-start" class="challenge-screen challenge-start">
     <div class="challenge-start-icon">⚡</div>
     <h1 class="challenge-start-title">Timed Challenge</h1>
-    <p class="challenge-start-sub">Answer as many questions as you can in <strong>5 minutes</strong></p>
+    <p class="challenge-start-sub">Answer as many as you can in <strong>1 minute</strong></p>
 
-    <ul class="challenge-rules">
-      <li>🔀 Questions from all subjects &amp; difficulties</li>
-      <li>⚡ Next question loads instantly after each answer</li>
-      <li>🚫 No hints — trust your knowledge</li>
-      <li>🏆 Beat your personal best</li>
-    </ul>
+    <!-- Subject picker -->
+    <div class="challenge-picker-group">
+      <div class="challenge-picker-label">Subject</div>
+      <div class="challenge-picker-row" id="subject-picker">
+        <button class="challenge-pick-btn" data-subject="physics">⚡ Physics</button>
+        <button class="challenge-pick-btn" data-subject="chemistry">⚗️ Chemistry</button>
+        <button class="challenge-pick-btn" data-subject="biology">🧬 Biology</button>
+        <button class="challenge-pick-btn challenge-pick-btn--active" data-subject="mix">🔀 Mix</button>
+      </div>
+    </div>
+
+    <!-- Mode picker -->
+    <div class="challenge-picker-group">
+      <div class="challenge-picker-label">Mode</div>
+      <div class="challenge-picker-row" id="mode-picker">
+        <button class="challenge-pick-btn challenge-pick-btn--active" data-mode="normal">Multiple Choice</button>
+        <button class="challenge-pick-btn challenge-pick-btn--hard" data-mode="hard">✍️ Hard — Type It</button>
+      </div>
+    </div>
 
     <div class="challenge-best-preview" id="challenge-best-preview" hidden>
       <span class="challenge-best-preview-label">Personal Best</span>
@@ -76,6 +88,6 @@
   <script src="physics-data.js?v=5"></script>
   <script src="chemistry-data.js?v=6"></script>
   <script src="biology-data.js?v=5"></script>
-  <script src="challenge.js?v=1"></script>
+  <script src="challenge.js?v=2"></script>
 </body>
 </html>
