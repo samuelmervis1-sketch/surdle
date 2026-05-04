@@ -676,6 +676,247 @@ body.stats-page main {
   .stat-bar-label      { font-size: 0.76rem; }
 }
 
+/* ===== Solve Timer Badge ===== */
+.timer-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 7px;
+  padding: 6px 2px 2px;
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: #555;
+  letter-spacing: 0.03em;
+  transition: color 0.2s;
+}
+
+.timer-wrap[hidden] { display: none; }
+
+.timer-icon { font-size: 1rem; line-height: 1; }
+
+#solve-timer {
+  font-variant-numeric: tabular-nums;
+  min-width: 38px;
+}
+
+.timer-done { color: #6aaa64; }
+
+/* ===== Daily Leaderboard ===== */
+.daily-lb {
+  border-top: 2px solid #e8e8ea;
+  margin-top: 8px;
+  padding-top: 18px;
+}
+
+.daily-lb[hidden] { display: none; }
+
+/* Name entry */
+.lb-name-entry {
+  background: #f7f7f8;
+  border: 1.5px solid #e8e8ea;
+  border-radius: 10px;
+  padding: 16px;
+  margin-bottom: 14px;
+}
+
+.lb-your-time-row {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.lb-your-time-label {
+  font-size: 0.85rem;
+  color: #555;
+}
+
+.lb-your-time-val {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: #1a1a1b;
+  letter-spacing: -0.02em;
+}
+
+.lb-name-form {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.lb-name-input {
+  flex: 1;
+  padding: 10px 12px;
+  font-family: inherit;
+  font-size: 0.92rem;
+  color: #1a1a1b;
+  border: 2px solid #d3d6da;
+  border-radius: 7px;
+  background: #fff;
+  outline: none;
+  transition: border-color 0.1s;
+}
+
+.lb-name-input:focus { border-color: #6aaa64; }
+
+.lb-name-submit-btn {
+  padding: 10px 16px;
+  background: #6aaa64;
+  color: #fff;
+  font-family: inherit;
+  font-size: 0.85rem;
+  font-weight: 700;
+  border: none;
+  border-radius: 7px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.1s;
+}
+
+.lb-name-submit-btn:hover { background: #538d4e; }
+
+.lb-skip-btn {
+  background: none;
+  border: none;
+  font-family: inherit;
+  font-size: 0.78rem;
+  color: #787c7e;
+  cursor: pointer;
+  padding: 2px 0;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.lb-skip-btn:hover { color: #555; }
+
+/* Rank badge */
+.lb-rank-badge {
+  text-align: center;
+  padding: 10px 16px;
+  background: #fffdf0;
+  border: 2px solid #ffd54f;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #1a1a1b;
+  margin-bottom: 12px;
+  animation: fadeIn 0.25s ease;
+}
+
+.lb-rank-badge[hidden] { display: none; }
+
+/* Table header row */
+.lb-table-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.lb-title {
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #555;
+}
+
+.lb-note {
+  font-size: 0.68rem;
+  color: #b0b4b8;
+  font-style: italic;
+}
+
+.lb-device-note {
+  font-size: 0.75rem;
+  color: #b0b4b8;
+  font-style: italic;
+  margin-bottom: 10px;
+}
+
+/* Leaderboard table */
+.lb-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.83rem;
+}
+
+.lb-table th {
+  text-align: left;
+  padding: 6px 8px;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: #787c7e;
+  border-bottom: 2px solid #e8e8ea;
+}
+
+.lb-table td {
+  padding: 9px 8px;
+  border-bottom: 1px solid #f0f0f2;
+  vertical-align: middle;
+}
+
+.lb-table tbody tr:last-child td { border-bottom: none; }
+
+.lb-table tbody tr:hover { background: #fafafa; }
+
+.lb-row--me { background: #fffdf0 !important; font-weight: 700; }
+.lb-row--me td { border-bottom-color: #ffd54f; }
+
+.lb-rank-cell  { width: 44px; font-size: 1rem; text-align: center; }
+.lb-name-cell  { font-weight: 600; color: #1a1a1b; }
+.lb-time-cell  { font-variant-numeric: tabular-nums; font-weight: 700;
+                  color: #538d4e; white-space: nowrap; }
+.lb-diff-cell  { text-align: right; }
+
+.lb-empty {
+  text-align: center;
+  color: #b0b4b8;
+  font-style: italic;
+  padding: 20px 8px !important;
+}
+
+/* All-time leaderboard tabs */
+.lb-tabs {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 12px;
+  flex-wrap: wrap;
+}
+
+.lb-tab {
+  padding: 6px 14px;
+  background: #f0f0f2;
+  border: 1.5px solid #e0e0e3;
+  border-radius: 20px;
+  font-family: inherit;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: #787c7e;
+  cursor: pointer;
+  transition: background 0.1s, color 0.1s, border-color 0.1s;
+}
+
+.lb-tab:hover { background: #e8e8ea; color: #555; }
+
+.lb-tab--active {
+  background: #1a1a1b;
+  border-color: #1a1a1b;
+  color: #fff;
+}
+
+.lb-table--alltime .lb-name-cell { font-weight: 400; }
+
+@media (max-width: 480px) {
+  .lb-name-form { flex-wrap: wrap; }
+  .lb-name-input { min-width: 0; }
+  .lb-name-submit-btn { width: 100%; }
+}
+
 /* Archive tabs */
 .tabs {
   display: flex;

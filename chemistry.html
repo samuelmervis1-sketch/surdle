@@ -20,7 +20,7 @@
   <meta name="twitter:image" content="https://dailysurdle.netlify.app/og-image.svg">
 
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="style.css?v=5">
+  <link rel="stylesheet" href="style.css?v=6">
 </head>
 <body>
   <header>
@@ -33,6 +33,12 @@
   <main>
     <a href="index.html" class="back-link">← Back to Home</a>
 
+    <!-- Live timer badge -->
+    <div id="solve-timer-wrap" class="timer-wrap" hidden>
+      <span class="timer-icon">⏱</span>
+      <span id="solve-timer">00:00</span>
+    </div>
+
     <div class="game-container">
       <div id="game-loading" class="spinner"></div>
       <p id="question" hidden></p>
@@ -44,6 +50,30 @@
       <div id="diagram-labels" hidden></div>
       <button id="submit-btn" hidden>Submit Answer</button>
       <div id="result" hidden></div>
+
+      <!-- Daily leaderboard (shown after solving) -->
+      <div id="daily-leaderboard" class="daily-lb" hidden>
+        <div id="lb-name-entry" class="lb-name-entry">
+          <div class="lb-your-time-row">
+            <span class="lb-your-time-label">You solved it in</span>
+            <span id="lb-your-time" class="lb-your-time-val">0:00</span>  
+          </div>
+          <div class="lb-name-form">
+            <input type="text" id="lb-name-input" class="lb-name-input" placeholder="Your name (optional)" maxlength="20" autocomplete="off">
+            <button id="lb-name-submit" class="lb-name-submit-btn">Add to Board</button>
+          </div>
+          <button id="lb-name-skip" class="lb-skip-btn">Skip</button>
+        </div>
+        <div id="lb-rank-badge" class="lb-rank-badge" hidden></div>
+        <div class="lb-table-header">
+          <span class="lb-title">Today's Leaderboard</span>
+          <span class="lb-note">This device only</span>
+        </div>
+        <table class="lb-table">
+          <thead><tr><th>Rank</th><th>Name</th><th>Time</th><th>Level</th></tr></thead>
+          <tbody id="lb-tbody"></tbody>
+        </table>
+      </div>
     </div>
   </main>
 
@@ -115,6 +145,6 @@
   </div>
 
   <script src="chemistry-data.js?v=6"></script>
-  <script src="script.js?v=6"></script>
+  <script src="script.js?v=7"></script>
 </body>
 </html>

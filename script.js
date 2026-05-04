@@ -44,8 +44,74 @@ function getPlayState(subject, dateStr) {
   try { return JSON.parse(raw); } catch { return null; }
 }
 
-function setPlayState(subject, dateStr, difficulty, solved) {
-  localStorage.setItem(`surdle_${subject}_${dateStr}`, JSON.stringify({ difficulty, solved }));
+function setPlayState(subject, dateStr, difficulty, solved, timeSecs) {
+  const data = { difficulty, solved };
+  if (timeSecs !== undefined) data.timeSecs = Math.round(timeSecs * 10) / 10;
+  localStorage.setItem(`surdle_${subject}_${dateStr}`, JSON.stringify(data));
+}
+
+// ---- Leaderboard helpers ----
+function formatTime(secs) {
+  const m = Math.floor(secs / 60);
+  const s = Math.floor(secs % 60);
+  return `${m}:${String(s).padStart(2, '0')}`;
+}
+
+function getRankIcon(rank) {
+  if (rank === 1) return '🥇';
+  if (rank === 2) return '🥈';
+  if (rank === 3) return '🥉';
+  return `#${rank}`;
+}
+
+function escapeHtml(str) {
+  return String(str)
+    .replace(/&/g, '&amp;').replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+}
+
+function getDailyLb(subject, dateStr) {
+  try {
+    return JSON.parse(localStorage.getItem(`surdle_lb_${subject}_${dateStr}`)) || [];
+  } catch { return []; }
+}
+
+function addToDailyLb(subject, dateStr, name, secs, difficulty) {
+  const entries = getDailyLb(subject, dateStr);
+  const _id = Date.now();
+  const entry = {
+    name: (name || 'Anonymous').trim().slice(0, 20) || 'Anonymous',
+    time: Math.round(secs * 10) / 10,
+    difficulty, _id
+  };
+  entries.push(entry);
+  entries.sort((a, b) => a.time - b.time);
+  const top = entries.slice(0, 10);
+  const rank = top.findIndex(e => e._id === _id) + 1;
+  top.forEach(e => delete e._id);
+  localStorage.setItem(`surdle_lb_${subject}_${dateStr}`, JSON.stringify(top));
+  return rank || null; // null = outside top 10
+}
+
+function getAllTimeLb() {
+  const def = { beginner: [], easy: [], medium: [], hard: [] };
+  try {
+    const raw = localStorage.getItem('surdle_lb_alltime');
+    return raw ? { ...def, ...JSON.parse(raw) } : def;
+  } catch { return def; }
+}
+
+function addToAllTimeLb(name, secs, subject, difficulty, date) {
+  const lb = getAllTimeLb();
+  if (!lb[difficulty]) lb[difficulty] = [];
+  lb[difficulty].push({
+    name: (name || 'Anonymous').trim().slice(0, 20) || 'Anonymous',
+    time: Math.round(secs * 10) / 10,
+    subject, date
+  });
+  lb[difficulty].sort((a, b) => a.time - b.time);
+  lb[difficulty] = lb[difficulty].slice(0, 20);
+  localStorage.setItem('surdle_lb_alltime', JSON.stringify(lb));
 }
 
 // ---- Stats ----
@@ -446,6 +512,106 @@ if (submitBtn) { try {
   let _simAnimFrame    = null;
   let attemptCount     = 0;   // tracks submit clicks this session
 
+  // ---- Solve timer ----
+  let _timerStart    = null;
+  let _timerInterval = null;
+
+  function startSolveTimer() {
+    if (_timerStart !== null) return; // already running
+    _timerStart = Date.now();
+    const wrap    = document.getElementById('solve-timer-wrap');
+    const display = document.getElementById('solve-timer');
+    if (wrap) wrap.hidden = false;
+    _timerInterval = setInterval(() => {
+      if (!display) return;
+      const elapsed = Math.floor((Date.now() - _timerStart) / 1000);
+      const m = Math.floor(elapsed / 60);
+      const s = elapsed % 60;
+      display.textContent =
+        `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+    }, 500);
+  }
+
+  function stopSolveTimer() {
+    clearInterval(_timerInterval);
+    _timerInterval = null;
+    const elapsed = _timerStart ? (Date.now() - _timerStart) / 1000 : 0;
+    const wrap = document.getElementById('solve-timer-wrap');
+    if (wrap) wrap.classList.add('timer-done');
+    return elapsed;
+  }
+
+  // ---- Daily leaderboard UI ----
+  function renderLbTable(entries, myRank) {
+    const tbody = document.getElementById('lb-tbody');
+    if (!tbody) return;
+    tbody.innerHTML = '';
+    if (!entries.length) {
+      tbody.innerHTML = '<tr><td colspan="4" class="lb-empty">No entries yet today</td></tr>';
+      return;
+    }
+    entries.forEach((e, i) => {
+      const tr = document.createElement('tr');
+      if (myRank && i + 1 === myRank) tr.className = 'lb-row--me';
+      tr.innerHTML =
+        `<td class="lb-rank-cell">${getRankIcon(i + 1)}</td>` +
+        `<td class="lb-name-cell">${escapeHtml(e.name)}</td>` +
+        `<td class="lb-time-cell">${formatTime(e.time)}</td>` +
+        `<td class="lb-diff-cell"><span class="difficulty-badge difficulty-badge--${e.difficulty}">${e.difficulty}</span></td>`;
+      tbody.appendChild(tr);
+    });
+  }
+
+  function showDailyLeaderboard(myRank) {
+    const lbEl = document.getElementById('daily-leaderboard');
+    if (!lbEl) return;
+    lbEl.hidden = false;
+    const entries = getDailyLb(subject, todayStr);
+    const nameEntry = document.getElementById('lb-name-entry');
+    if (nameEntry) nameEntry.hidden = true;
+    const rankBadge = document.getElementById('lb-rank-badge');
+    if (rankBadge && myRank) {
+      rankBadge.hidden = false;
+      rankBadge.innerHTML = myRank === 1
+        ? '🥇 You set the fastest time today!'
+        : `You ranked <strong>#${myRank}</strong> today! ⚡`;
+    }
+    renderLbTable(entries, myRank);
+  }
+
+  function showLeaderboardEntry(secs) {
+    const lbEl = document.getElementById('daily-leaderboard');
+    if (!lbEl || testIdx !== null) return; // skip in test/archive mode
+    lbEl.hidden = false;
+
+    const yourTimeEl = document.getElementById('lb-your-time');
+    if (yourTimeEl) yourTimeEl.textContent = formatTime(secs);
+
+    // Pre-fill name from last session
+    const nameInput = document.getElementById('lb-name-input');
+    const lastName  = localStorage.getItem('surdle_last_name') || '';
+    if (nameInput && lastName) nameInput.value = lastName;
+
+    function submitEntry(rawName) {
+      const name = (rawName || '').trim();
+      if (name) localStorage.setItem('surdle_last_name', name);
+      const rank = addToDailyLb(subject, todayStr, name, secs, chosenDifficulty);
+      addToAllTimeLb(name, secs, subject, chosenDifficulty, todayStr);
+      showDailyLeaderboard(rank);
+    }
+
+    document.getElementById('lb-name-submit')
+      ?.addEventListener('click', () => submitEntry(nameInput?.value || ''));
+    nameInput
+      ?.addEventListener('keydown', e => { if (e.key === 'Enter') submitEntry(nameInput.value); });
+    document.getElementById('lb-name-skip')
+      ?.addEventListener('click', () => {
+        const nameEntry = document.getElementById('lb-name-entry');
+        if (nameEntry) nameEntry.hidden = true;
+        renderLbTable(getDailyLb(subject, todayStr), null);
+      });
+  }
+
   // ---- MCQ ----
   function renderMCQ(question) {
     const LABELS = ['A', 'B', 'C', 'D'];
@@ -616,9 +782,10 @@ if (submitBtn) { try {
         else row.classList.add('wrong');
       });
       if (correct === q.correctLabels.length) {
+        const t = stopSolveTimer();
         recordSolve(subject, chosenDifficulty, attemptCount === 1);
-        setPlayState(subject, todayStr, chosenDifficulty, true);
-        lockPuzzle(); showSolvedState();
+        setPlayState(subject, todayStr, chosenDifficulty, true, t);
+        lockPuzzle(); showSolvedState(); showLeaderboardEntry(t);
       } else {
         resultEl.hidden = false; resultEl.className = 'wrong';
         resultEl.textContent = `${correct}/${q.correctLabels.length} correct \u2014 Try again!`;
@@ -653,9 +820,10 @@ if (submitBtn) { try {
           _simRunning = false;
           const margin = Math.abs(prediction - actualTime) / actualTime;
           if (margin <= 0.10) {
+            const t = stopSolveTimer();
             recordSolve(subject, chosenDifficulty, attemptCount === 1);
-            setPlayState(subject, todayStr, chosenDifficulty, true);
-            lockPuzzle(); showSolvedState();
+            setPlayState(subject, todayStr, chosenDifficulty, true, t);
+            lockPuzzle(); showSolvedState(); showLeaderboardEntry(t);
           } else {
             submitBtn.disabled = false;
             submitBtn.textContent = 'Run Again';
@@ -676,9 +844,10 @@ if (submitBtn) { try {
       const selected = document.querySelector('input[name="answer"]:checked');
       if (!selected) { attemptCount--; return; }
       if (Number(selected.value) === q.correct) {
+        const t = stopSolveTimer();
         recordSolve(subject, chosenDifficulty, attemptCount === 1);
-        setPlayState(subject, todayStr, chosenDifficulty, true);
-        lockPuzzle(); showSolvedState();
+        setPlayState(subject, todayStr, chosenDifficulty, true, t);
+        lockPuzzle(); showSolvedState(); showLeaderboardEntry(t);
       } else {
         resultEl.hidden = false; resultEl.className = 'wrong';
         resultEl.textContent = 'Wrong \u2717 \u2014 Try again!';
@@ -734,6 +903,11 @@ if (submitBtn) { try {
       }
       lockPuzzle();
       showSolvedState();
+      // Show existing leaderboard without name entry (already submitted earlier)
+      if (testIdx === null) showDailyLeaderboard(null);
+    } else if (testIdx === null) {
+      // Fresh puzzle — start timer
+      startSolveTimer();
     }
   }
 

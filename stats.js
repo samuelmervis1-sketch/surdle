@@ -146,6 +146,75 @@ function getPrevDay(dateStr) {
   }
 })();
 
+// ---- Leaderboard helpers (stats page standalone copies) ----
+function getAllTimeLb() {
+  const def = { beginner: [], easy: [], medium: [], hard: [] };
+  try {
+    const raw = localStorage.getItem('surdle_lb_alltime');
+    return raw ? { ...def, ...JSON.parse(raw) } : def;
+  } catch { return def; }
+}
+
+function formatTime(secs) {
+  const m = Math.floor(secs / 60);
+  const s = Math.floor(secs % 60);
+  return `${m}:${String(s).padStart(2, '0')}`;
+}
+
+function getRankIcon(rank) {
+  if (rank === 1) return '🥇';
+  if (rank === 2) return '🥈';
+  if (rank === 3) return '🥉';
+  return `#${rank}`;
+}
+
+function escapeHtml(str) {
+  return String(str)
+    .replace(/&/g, '&amp;').replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+}
+
+function subjectIcon(s) {
+  return s === 'physics' ? '⚡' : s === 'chemistry' ? '⚗️' : '🧬';
+}
+
+// ---- All-time leaderboard rendering ----
+(function () {
+  const tabsEl  = document.getElementById('alltime-tabs');
+  const tbody   = document.getElementById('alltime-lb-tbody');
+  if (!tabsEl || !tbody) return;
+
+  function renderAlltimeLb(diff) {
+    const lb      = getAllTimeLb();
+    const entries = lb[diff] || [];
+    tbody.innerHTML = '';
+    if (!entries.length) {
+      tbody.innerHTML = '<tr><td colspan="5" class="lb-empty">No records yet — start solving!</td></tr>';
+      return;
+    }
+    entries.forEach((e, i) => {
+      const tr = document.createElement('tr');
+      tr.innerHTML =
+        `<td class="lb-rank-cell">${getRankIcon(i + 1)}</td>` +
+        `<td class="lb-name-cell">${escapeHtml(e.name)}</td>` +
+        `<td class="lb-time-cell">${formatTime(e.time)}</td>` +
+        `<td class="lb-name-cell">${subjectIcon(e.subject)} ${e.subject || '—'}</td>` +
+        `<td class="lb-time-cell">${e.date || '—'}</td>`;
+      tbody.appendChild(tr);
+    });
+  }
+
+  tabsEl.querySelectorAll('.lb-tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+      tabsEl.querySelectorAll('.lb-tab').forEach(t => t.classList.remove('lb-tab--active'));
+      tab.classList.add('lb-tab--active');
+      renderAlltimeLb(tab.dataset.diff);
+    });
+  });
+
+  renderAlltimeLb('beginner'); // default tab
+})();
+
 function renderBars(containerId, items) {
   const container = document.getElementById(containerId);
   if (!container) return;
