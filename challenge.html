@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Timed Challenge — DailySurdle</title>
+  <meta name="description" content="Race the clock: answer as many science questions as you can in 5 minutes.">
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://dailysurdle.netlify.app/challenge.html">
+  <meta property="og:title" content="Timed Challenge — DailySurdle">
+  <meta property="og:description" content="Race the clock: answer as many science questions as you can in 5 minutes.">
+  <meta property="og:image" content="https://dailysurdle.netlify.app/og-image.svg">
+
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="style.css?v=7">
+</head>
+<body class="challenge-page">
+
+  <header class="challenge-header-bar">
+    <a href="index.html" class="challenge-back-link">← Home</a>
+    <div class="challenge-live-stats" id="challenge-live-stats" hidden>
+      <span class="challenge-timer" id="challenge-timer">5:00 ⏱️</span>
+      <span class="challenge-score" id="challenge-score">Score: 0 ✓</span>
+    </div>
+  </header>
+
+  <!-- ===== START SCREEN ===== -->
+  <div id="challenge-start" class="challenge-screen challenge-start">
+    <div class="challenge-start-icon">⚡</div>
+    <h1 class="challenge-start-title">Timed Challenge</h1>
+    <p class="challenge-start-sub">Answer as many questions as you can in <strong>5 minutes</strong></p>
+
+    <ul class="challenge-rules">
+      <li>🔀 Questions from all subjects &amp; difficulties</li>
+      <li>⚡ Next question loads instantly after each answer</li>
+      <li>🚫 No hints — trust your knowledge</li>
+      <li>🏆 Beat your personal best</li>
+    </ul>
+
+    <div class="challenge-best-preview" id="challenge-best-preview" hidden>
+      <span class="challenge-best-preview-label">Personal Best</span>
+      <span class="challenge-best-preview-num" id="challenge-best-preview-num">0</span>
+    </div>
+
+    <button class="challenge-start-btn" id="challenge-start-btn">Start Challenge</button>
+  </div>
+
+  <!-- ===== GAME SCREEN ===== -->
+  <div id="challenge-game" class="challenge-screen" hidden>
+    <div class="challenge-question-wrap" id="challenge-question-wrap">
+      <div class="challenge-subject-badge" id="challenge-subject-badge"></div>
+      <p class="challenge-question-text" id="challenge-question"></p>
+      <div class="challenge-options" id="challenge-options"></div>
+    </div>
+  </div>
+
+  <!-- ===== RESULTS SCREEN ===== -->
+  <div id="challenge-results" class="challenge-screen challenge-results" hidden>
+    <div class="challenge-results-icon" id="challenge-results-icon">⏱️</div>
+    <h2 class="challenge-results-title">Time's Up!</h2>
+    <p class="challenge-results-final" id="res-final">You scored 0/0</p>
+    <p class="challenge-results-accuracy" id="res-accuracy">0% correct</p>
+
+    <div class="challenge-results-best" id="res-best-wrap">
+      <span id="res-best">Personal best: 0</span>
+    </div>
+
+    <div class="challenge-results-breakdown" id="res-breakdown"></div>
+
+    <button class="challenge-start-btn challenge-play-again-btn" id="challenge-play-again-btn">Play Again</button>
+    <a href="index.html" class="challenge-home-link">← Back to Home</a>
+  </div>
+
+  <script src="physics-data.js?v=5"></script>
+  <script src="chemistry-data.js?v=6"></script>
+  <script src="biology-data.js?v=5"></script>
+  <script src="challenge.js?v=1"></script>
+</body>
+</html>
