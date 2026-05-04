@@ -2649,3 +2649,622 @@ main {
   .quiz-diff-sub  { display: none; }
   .quiz-stats-grid { grid-template-columns: repeat(3, 1fr); }
 }
+
+
+/* =====================================================
+   SMOOTH THEME TRANSITIONS
+   ===================================================== */
+body,
+header,
+.game-tile,
+.option-label,
+.stat-card,
+.stats-streak-card,
+.modal,
+.quiz-question-card,
+.quiz-pick-btn,
+.quiz-diff-btn,
+.archive-item,
+.hint-box,
+.hint-btn,
+.lb-name-entry,
+.lb-tab,
+.tab,
+.settings-row,
+.theme-card,
+.font-size-btn {
+  transition: background-color 0.22s ease, border-color 0.22s ease, color 0.22s ease;
+}
+
+/* =====================================================
+   THEME TOGGLE BUTTON (in header)
+   ===================================================== */
+.theme-toggle {
+  width: 32px;
+  height: 32px;
+  background: none;
+  border: 2px solid #d3d6da;
+  border-radius: 50%;
+  font-size: 0.85rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  line-height: 1;
+  font-family: inherit;
+  transition: border-color 0.1s, background 0.1s;
+  flex-shrink: 0;
+}
+.theme-toggle:hover {
+  border-color: #878a8c;
+  background: #f0f0f2;
+}
+
+/* =====================================================
+   SETTINGS PAGE
+   ===================================================== */
+body.settings-page header,
+body.settings-page main {
+  max-width: 500px;
+}
+
+.settings-section {
+  margin-bottom: 28px;
+}
+
+.settings-section-title {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #787c7e;
+  margin-bottom: 12px;
+  border-bottom: 1px solid #e8e8ea;
+  padding-bottom: 6px;
+}
+
+/* Dark mode row */
+.settings-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 16px;
+  background: #fafafa;
+  border: 1.5px solid #e8e8ea;
+  border-radius: 10px;
+}
+.settings-row-info { flex: 1; }
+.settings-row-label {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #1a1a1b;
+}
+.settings-row-sub {
+  display: block;
+  font-size: 0.78rem;
+  color: #787c7e;
+  margin-top: 2px;
+}
+
+.settings-dark-toggle {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 8px 14px;
+  background: #f0f0f2;
+  border: 1.5px solid #d3d6da;
+  border-radius: 20px;
+  font-family: inherit;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #555;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.15s, border-color 0.15s, color 0.15s;
+  margin-left: 12px;
+  flex-shrink: 0;
+}
+.settings-dark-toggle:hover {
+  background: #e8e8ea;
+  border-color: #aaa;
+}
+.settings-dark-toggle.is-on {
+  background: #1a1a2e;
+  border-color: #5555aa;
+  color: #c8c8f0;
+}
+
+/* Color theme grid */
+.theme-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+}
+
+@media (max-width: 480px) {
+  .theme-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+.theme-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 9px;
+  padding: 14px 8px 12px;
+  background: #fafafa;
+  border: 2px solid #e8e8ea;
+  border-radius: 10px;
+  cursor: pointer;
+  font-family: inherit;
+  transition: border-color 0.15s, transform 0.12s;
+}
+.theme-card:hover {
+  border-color: #aaa;
+  transform: translateY(-2px);
+}
+.theme-card--active {
+  border-color: #1a1a1b;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.12);
+}
+
+.theme-swatches {
+  display: flex;
+  gap: 4px;
+}
+.swatch {
+  width: 13px;
+  height: 13px;
+  border-radius: 50%;
+  display: inline-block;
+}
+.theme-card-name {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #787c7e;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+.theme-card--active .theme-card-name { color: #1a1a1b; }
+
+/* Font size buttons */
+.font-size-row {
+  display: flex;
+  gap: 10px;
+}
+.font-size-btn {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 18px 10px 14px;
+  background: #fafafa;
+  border: 2px solid #e8e8ea;
+  border-radius: 10px;
+  cursor: pointer;
+  font-family: inherit;
+  transition: border-color 0.15s;
+}
+.font-size-btn:hover { border-color: #aaa; }
+.font-size-btn--active { border-color: #1a1a1b; }
+
+.font-size-letter {
+  font-weight: 800;
+  color: #1a1a1b;
+  line-height: 1;
+}
+.font-size-btn:nth-child(1) .font-size-letter { font-size: 1.1rem; }
+.font-size-btn:nth-child(2) .font-size-letter { font-size: 1.5rem; }
+.font-size-btn:nth-child(3) .font-size-letter { font-size: 1.9rem; }
+
+.font-size-label {
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #787c7e;
+}
+
+/* Settings about section */
+.settings-about {
+  padding: 16px;
+  background: #fafafa;
+  border: 1.5px solid #e8e8ea;
+  border-radius: 10px;
+  font-size: 0.82rem;
+  color: #787c7e;
+  line-height: 1.6;
+  text-align: center;
+}
+.settings-about strong { color: #1a1a1b; display: block; margin-bottom: 4px; font-size: 0.9rem; }
+
+/* =====================================================
+   FONT SIZE SCALING
+   ===================================================== */
+[data-font="small"] { zoom: 0.875; }
+[data-font="large"]  { zoom: 1.125; }
+
+/* =====================================================
+   DARK MODE
+   ===================================================== */
+[data-theme="dark"] { color-scheme: dark; }
+
+[data-theme="dark"] body {
+  background: #1a1a1a;
+  color: #e0e0e0;
+}
+[data-theme="dark"] header { border-bottom-color: #3a3a3a; }
+[data-theme="dark"] h1 { color: #f0f0f0; }
+[data-theme="dark"] .subtitle { color: #888; }
+
+/* Nav links */
+[data-theme="dark"] .header-nav-link { color: #888; }
+[data-theme="dark"] .header-nav-link:hover { color: #e0e0e0; }
+[data-theme="dark"] .header-back-link { color: #888; }
+[data-theme="dark"] .header-back-link:hover { color: #e0e0e0; }
+[data-theme="dark"] .back-link { color: #888; }
+[data-theme="dark"] .back-link:hover { color: #e0e0e0; }
+[data-theme="dark"] .how-to-play-btn { border-color: #444; color: #888; }
+[data-theme="dark"] .how-to-play-btn:hover { border-color: #666; color: #e0e0e0; }
+[data-theme="dark"] .theme-toggle { border-color: #555; }
+[data-theme="dark"] .theme-toggle:hover { border-color: #888; background: #2d2d2d; }
+
+/* Question + options */
+[data-theme="dark"] #question { color: #e0e0e0; }
+[data-theme="dark"] .option-label {
+  border-color: #444;
+  color: #e0e0e0;
+  background: #2d2d2d;
+}
+[data-theme="dark"] .option-label:hover { border-color: #666; }
+[data-theme="dark"] .option-label.selected {
+  border-color: #6aaa64;
+  background: #192e19;
+}
+[data-theme="dark"] .option-label.disabled:hover { border-color: #444; }
+[data-theme="dark"] .option-label.disabled.selected { border-color: #6aaa64; }
+[data-theme="dark"] #submit-btn:disabled { background: #3a3a3a; }
+
+/* Result box */
+[data-theme="dark"] #result.wrong {
+  background: #2d2d2d;
+  color: #a0a4a8;
+  border-color: #444;
+}
+[data-theme="dark"] #result.correct,
+[data-theme="dark"] #result.solved {
+  background: #192e19;
+  color: #6aaa64;
+  border-color: #4a7a4a;
+}
+[data-theme="dark"] .solved-sub { color: #6aaa64; }
+[data-theme="dark"] .solved-countdown { color: #888; }
+
+/* Countdown */
+[data-theme="dark"] .countdown-label { color: #888; }
+[data-theme="dark"] #countdown { color: #e0e0e0; }
+
+/* Home page tiles */
+[data-theme="dark"] .game-tile {
+  border-color: #3a3a3a;
+  background: #252525;
+}
+[data-theme="dark"] .game-tile:hover { border-color: #555; }
+[data-theme="dark"] .game-tile h2 { color: #e0e0e0; }
+[data-theme="dark"] .game-desc { color: #888; }
+[data-theme="dark"] .tile-choose-level { background: #333; color: #888; border-color: #555; }
+[data-theme="dark"] .tile-solved-check { color: #6aaa64; }
+
+/* Streak banner */
+[data-theme="dark"] .streak-banner { background: #252525; border-color: #3a3a3a; }
+[data-theme="dark"] .streak-banner.has-streak { background: #2a2410; border-color: #6b5700; }
+[data-theme="dark"] .streak-banner.at-risk { background: #2a1e00; border-color: #a07000; }
+[data-theme="dark"] .streak-text strong { color: #e0e0e0; }
+[data-theme="dark"] .streak-label { color: #888; }
+[data-theme="dark"] .streak-divider { color: #444; }
+
+/* Quiz tile */
+[data-theme="dark"] .quiz-tile { background: #252525; border-color: #3a3a3a; }
+[data-theme="dark"] .quiz-tile:hover { border-color: #6aaa64; }
+[data-theme="dark"] .quiz-tile-title { color: #e0e0e0; }
+[data-theme="dark"] .quiz-tile-sub { color: #888; }
+
+/* Hint */
+[data-theme="dark"] .hint-box { background: #2d2d2d; color: #a0a4a8; }
+[data-theme="dark"] .hint-box strong { color: #e0e0e0; }
+[data-theme="dark"] .hint-btn { background: #252525; border-color: #3a3a3a; color: #a0a4a8; }
+[data-theme="dark"] .hint-btn:hover:not(:disabled) { background: #333; color: #e0e0e0; }
+
+/* Timer */
+[data-theme="dark"] .timer-wrap { color: #a0a4a8; }
+[data-theme="dark"] .timer-done { color: #6aaa64; }
+
+/* Stats page */
+[data-theme="dark"] .stats-streak-card { background: #252525; border-color: #3a3a3a; }
+[data-theme="dark"] .stats-streak-card--current { background: #2a2410; border-color: #6b5700; }
+[data-theme="dark"] .stats-streak-num { color: #e0e0e0; }
+[data-theme="dark"] .stats-streak-lbl { color: #888; }
+[data-theme="dark"] .streak-at-risk { color: #f5a623; }
+
+[data-theme="dark"] .stat-card { background: #252525; border-color: #3a3a3a; }
+[data-theme="dark"] .stat-card-num { color: #e0e0e0; }
+[data-theme="dark"] .stat-card-lbl { color: #888; }
+[data-theme="dark"] .stats-section-title { color: #888; border-bottom-color: #3a3a3a; }
+[data-theme="dark"] .stat-bar-track { background: #333; }
+[data-theme="dark"] .stat-bar-label { color: #e0e0e0; }
+[data-theme="dark"] .stat-bar-value { color: #e0e0e0; }
+
+/* Stats reset */
+[data-theme="dark"] .stats-reset-btn { border-color: #3a3a3a; color: #888; }
+[data-theme="dark"] .stats-reset-btn:hover { border-color: #d95f5f; color: #d95f5f; }
+[data-theme="dark"] .stats-reset-confirm { background: #2d1a1a; border-color: #7a3a3a; }
+[data-theme="dark"] .stats-reset-confirm p { color: #a0a4a8; }
+[data-theme="dark"] .stats-reset-cancel-btn { background: #2d2d2d; border-color: #3a3a3a; color: #a0a4a8; }
+[data-theme="dark"] .stats-reset-cancel-btn:hover { border-color: #666; }
+
+/* Leaderboard */
+[data-theme="dark"] .daily-lb { border-top-color: #3a3a3a; }
+[data-theme="dark"] .lb-device-note { color: #555; }
+[data-theme="dark"] .lb-title { color: #888; }
+[data-theme="dark"] .lb-note { color: #555; }
+[data-theme="dark"] .lb-name-entry { background: #252525; border-color: #3a3a3a; }
+[data-theme="dark"] .lb-your-time-val { color: #e0e0e0; }
+[data-theme="dark"] .lb-your-time-label { color: #888; }
+[data-theme="dark"] .lb-name-input {
+  background: #333;
+  border-color: #555;
+  color: #e0e0e0;
+}
+[data-theme="dark"] .lb-name-input:focus { border-color: #6aaa64; }
+[data-theme="dark"] .lb-name-input::placeholder { color: #666; }
+[data-theme="dark"] .lb-skip-btn { color: #666; }
+[data-theme="dark"] .lb-skip-btn:hover { color: #a0a4a8; }
+[data-theme="dark"] .lb-rank-badge { background: #2a2410; border-color: #6b5700; color: #e0e0e0; }
+[data-theme="dark"] .lb-table th { color: #888; border-bottom-color: #3a3a3a; }
+[data-theme="dark"] .lb-table td { border-bottom-color: #2a2a2a; }
+[data-theme="dark"] .lb-table tbody tr:hover { background: #252525; }
+[data-theme="dark"] .lb-row--me { background: #2a2410 !important; }
+[data-theme="dark"] .lb-name-cell { color: #e0e0e0; }
+[data-theme="dark"] .lb-empty { color: #555; }
+[data-theme="dark"] .lb-tab { background: #252525; border-color: #3a3a3a; color: #888; }
+[data-theme="dark"] .lb-tab:hover { background: #333; color: #aaa; }
+[data-theme="dark"] .lb-tab--active { background: #e0e0e0; border-color: #e0e0e0; color: #1a1a1a; }
+
+/* Archive */
+[data-theme="dark"] .tabs { border-bottom-color: #3a3a3a; }
+[data-theme="dark"] .tab { color: #888; }
+[data-theme="dark"] .tab:hover { color: #e0e0e0; }
+[data-theme="dark"] .tab.active { color: #e0e0e0; border-bottom-color: #6aaa64; }
+[data-theme="dark"] .archive-item { border-color: #3a3a3a; background: #252525; }
+[data-theme="dark"] .archive-item:hover { border-color: #555; }
+[data-theme="dark"] .archive-item--solved { border-color: #4a7a4a; background: #192e19; }
+[data-theme="dark"] .archive-date { color: #e0e0e0; }
+[data-theme="dark"] .archive-preview { color: #888; }
+
+/* Modals */
+[data-theme="dark"] .modal-backdrop { background: rgba(0,0,0,0.72); }
+[data-theme="dark"] .modal { background: #252525; color: #e0e0e0; }
+[data-theme="dark"] .modal-date-label { color: #888; }
+[data-theme="dark"] .modal-close { color: #888; }
+[data-theme="dark"] .modal-close:hover { color: #e0e0e0; }
+[data-theme="dark"] .htp-section h3 { color: #e0e0e0; }
+[data-theme="dark"] .htp-section p { color: #a0a4a8; }
+[data-theme="dark"] .htp-example { background: #333; }
+[data-theme="dark"] .htp-example > p { color: #e0e0e0; }
+[data-theme="dark"] .htp-option { border-color: #444; color: #a0a4a8; }
+[data-theme="dark"] .htp-option--correct { border-color: #6aaa64; background: #192e19; color: #6aaa64; }
+
+/* Diff selector */
+[data-theme="dark"] .diff-selector-panel { background: #252525; }
+[data-theme="dark"] .diff-selector-title { color: #e0e0e0; }
+[data-theme="dark"] .diff-selector-close { background: #333; color: #a0a4a8; }
+[data-theme="dark"] .diff-selector-close:hover { background: #444; color: #e0e0e0; }
+[data-theme="dark"] .diff-selector-sub { color: #888; }
+
+/* Diagram + simulation inputs */
+[data-theme="dark"] .diagram-label-row { border-color: #3a3a3a; background: #252525; }
+[data-theme="dark"] .diagram-label-row.correct { border-color: #6aaa64; background: #192e19; }
+[data-theme="dark"] .diagram-label-row.wrong { border-color: #e07b7b; background: #2e1a1a; }
+[data-theme="dark"] .diagram-select { background: #333; border-color: #555; color: #e0e0e0; }
+[data-theme="dark"] .diagram-select:disabled { background: #252525; color: #888; }
+[data-theme="dark"] .sim-select { background: #333; border-color: #555; color: #e0e0e0; }
+[data-theme="dark"] .sim-input { background: #333; border-color: #555; color: #e0e0e0; }
+[data-theme="dark"] .sim-input:disabled { background: #252525; color: #888; }
+[data-theme="dark"] .sim-unit { color: #888; }
+[data-theme="dark"] .sim-ctrl-label { color: #888; }
+[data-theme="dark"] .spinner::after { border-color: #444; border-top-color: #6aaa64; }
+[data-theme="dark"] .error-message { color: #888; }
+[data-theme="dark"] .error-message strong { color: #e0e0e0; }
+
+/* Learn more */
+[data-theme="dark"] .learn-more-btn { color: #6aaa64; border-color: #4a7a4a; }
+[data-theme="dark"] .learn-more-btn:hover { background: #192e19; border-color: #6aaa64; }
+[data-theme="dark"] .learn-more-panel { background: #192e19; border-color: #4a7a4a; }
+[data-theme="dark"] .learn-more-panel p { color: #b0c8b0 !important; }
+[data-theme="dark"] .learn-more-link { color: #6aaa64; }
+
+/* Quiz page dark mode */
+[data-theme="dark"] body.quiz-page { background: #1a1a1a; }
+[data-theme="dark"] .quiz-header-bar { background: #252525; border-bottom-color: #3a3a3a; }
+[data-theme="dark"] .quiz-back-link { color: #888; }
+[data-theme="dark"] .quiz-back-link:hover { color: #e0e0e0; }
+[data-theme="dark"] .quiz-header-title { color: #555; }
+[data-theme="dark"] .quiz-setup-title { color: #e0e0e0; }
+[data-theme="dark"] .quiz-setup-sub { color: #888; }
+[data-theme="dark"] .quiz-setup-label { color: #666; }
+[data-theme="dark"] .quiz-pick-btn { background: #252525; border-color: #3a3a3a; color: #a0a4a8; }
+[data-theme="dark"] .quiz-pick-btn:hover { border-color: #555; color: #e0e0e0; }
+[data-theme="dark"] .quiz-pick-btn--active { border-color: #6aaa64; color: #6aaa64; background: #192e19; }
+[data-theme="dark"] .quiz-diff-btn { background: #252525; border-color: #3a3a3a; }
+[data-theme="dark"] .quiz-diff-btn:hover { border-color: #555; }
+[data-theme="dark"] .quiz-diff-btn--active { border-color: #6aaa64; background: #192e19; }
+[data-theme="dark"] .quiz-diff-name { color: #e0e0e0; }
+[data-theme="dark"] .quiz-diff-sub { color: #888; }
+[data-theme="dark"] .quiz-progress-track { background: #333; }
+[data-theme="dark"] .quiz-q-counter { color: #888; }
+[data-theme="dark"] .quiz-score-live { color: #6aaa64; }
+[data-theme="dark"] .quiz-question-card { background: #252525; box-shadow: 0 2px 14px rgba(0,0,0,0.4); }
+[data-theme="dark"] .quiz-question-text { color: #e0e0e0; }
+[data-theme="dark"] .quiz-option { background: #333; border-color: #3a3a3a; color: #e0e0e0; }
+[data-theme="dark"] .quiz-option:hover:not(:disabled) { border-color: #555; background: #3a3a3a; }
+[data-theme="dark"] .quiz-option--correct { background: #192e19 !important; border-color: #538d4e !important; color: #9dd99a !important; }
+[data-theme="dark"] .quiz-option--wrong { background: #2e1a1a !important; border-color: #d95f5f !important; color: #f08080 !important; }
+[data-theme="dark"] .quiz-feedback--correct { background: #192e19; color: #9dd99a; }
+[data-theme="dark"] .quiz-feedback--wrong { background: #2e1a1a; color: #f08080; }
+[data-theme="dark"] .quiz-hint-btn { border-color: #c68000; color: #f5a623; }
+[data-theme="dark"] .quiz-hint-btn:hover:not(:disabled) { background: #2a2010; }
+[data-theme="dark"] .quiz-hint-item { background: #2a2010; color: #f5a623; }
+[data-theme="dark"] .quiz-next-btn { background: #e0e0e0; color: #1a1a1a; }
+[data-theme="dark"] .quiz-next-btn:hover { filter: brightness(0.88); }
+[data-theme="dark"] .quiz-results-score { color: #e0e0e0; }
+[data-theme="dark"] .quiz-results-label { color: #888; }
+[data-theme="dark"] .quiz-results-summary { background: #252525; box-shadow: 0 2px 8px rgba(0,0,0,0.3); }
+[data-theme="dark"] .quiz-summary-row { color: #a0a4a8; border-bottom-color: #333; }
+[data-theme="dark"] .quiz-summary-row strong { color: #e0e0e0; }
+[data-theme="dark"] .quiz-summary-row--final { color: #e0e0e0; }
+[data-theme="dark"] .quiz-breakdown-title { color: #555; }
+[data-theme="dark"] .quiz-breakdown-row { background: #252525; box-shadow: 0 1px 4px rgba(0,0,0,0.3); border-left-color: #3a3a3a; }
+[data-theme="dark"] .quiz-breakdown-row--correct { border-left-color: #538d4e; }
+[data-theme="dark"] .quiz-breakdown-row--wrong { border-left-color: #d95f5f; }
+[data-theme="dark"] .quiz-bd-num { color: #555; }
+[data-theme="dark"] .quiz-bd-text { color: #c0c0c0; }
+[data-theme="dark"] .quiz-breakdown-hint { background: #2a2010; color: #f5a623; }
+[data-theme="dark"] .quiz-breakdown-answer { color: #6aaa64; }
+[data-theme="dark"] .quiz-home-link { color: #888; }
+[data-theme="dark"] .quiz-home-link:hover { color: #e0e0e0; }
+
+/* Settings page dark mode */
+[data-theme="dark"] .settings-section-title { color: #888; border-bottom-color: #3a3a3a; }
+[data-theme="dark"] .settings-row { background: #252525; border-color: #3a3a3a; }
+[data-theme="dark"] .settings-row-label { color: #e0e0e0; }
+[data-theme="dark"] .settings-row-sub { color: #888; }
+[data-theme="dark"] .settings-dark-toggle { background: #333; border-color: #444; color: #a0a4a8; }
+[data-theme="dark"] .settings-dark-toggle:hover { background: #3a3a3a; border-color: #666; }
+[data-theme="dark"] .settings-dark-toggle.is-on { background: #1a1a2e; border-color: #5555aa; color: #c8c8f0; }
+[data-theme="dark"] .theme-card { background: #252525; border-color: #3a3a3a; }
+[data-theme="dark"] .theme-card:hover { border-color: #555; }
+[data-theme="dark"] .theme-card--active { border-color: #c8c8c8; box-shadow: 0 2px 10px rgba(255,255,255,0.06); }
+[data-theme="dark"] .theme-card-name { color: #888; }
+[data-theme="dark"] .theme-card--active .theme-card-name { color: #e0e0e0; }
+[data-theme="dark"] .font-size-btn { background: #252525; border-color: #3a3a3a; }
+[data-theme="dark"] .font-size-btn:hover { border-color: #555; }
+[data-theme="dark"] .font-size-btn--active { border-color: #c8c8c8; }
+[data-theme="dark"] .font-size-letter { color: #e0e0e0; }
+[data-theme="dark"] .font-size-label { color: #888; }
+[data-theme="dark"] .settings-about { background: #252525; border-color: #3a3a3a; color: #888; }
+[data-theme="dark"] .settings-about strong { color: #e0e0e0; }
+
+/* =====================================================
+   COLOR THEME — OCEAN  (blues & teals)
+   Primary: #0096c7  Hover: #0077a3
+   ===================================================== */
+[data-color="ocean"] .play-btn { background: #0096c7; }
+[data-color="ocean"] .play-btn:hover { background: #0077a3; }
+[data-color="ocean"] #submit-btn { background: #0096c7; }
+[data-color="ocean"] #submit-btn:hover { background: #0077a3; }
+[data-color="ocean"] .option-label.selected { border-color: #0096c7; background: #e0f4fb; }
+[data-color="ocean"] .option-label input[type="radio"] { accent-color: #0096c7; }
+[data-color="ocean"] #result.correct,
+[data-color="ocean"] #result.solved { color: #0077a3; border-color: #0096c7; background: #e0f4fb; }
+[data-color="ocean"] .solved-sub { color: #0077a3; }
+[data-color="ocean"] .timer-done { color: #0096c7; }
+[data-color="ocean"] .archive-today { background: #0096c7; }
+[data-color="ocean"] .archive-item--solved { border-color: #48cae4; background: #e8f7fc; }
+[data-color="ocean"] .archive-status--solved { color: #0077a3; }
+[data-color="ocean"] .tab.active { color: #1a1a1b; border-bottom-color: #0096c7; }
+[data-color="ocean"] .lb-name-submit-btn { background: #0096c7; }
+[data-color="ocean"] .lb-name-submit-btn:hover { background: #0077a3; }
+[data-color="ocean"] .lb-name-input:focus { border-color: #0096c7; }
+[data-color="ocean"] .lb-time-cell { color: #0077a3; }
+[data-color="ocean"] .lb-tab--active { background: #0096c7; border-color: #0096c7; }
+[data-color="ocean"] .difficulty-badge--easy { background: #0096c7; }
+[data-color="ocean"] .quiz-tile:hover { border-color: #0096c7; }
+[data-color="ocean"] .quiz-tile-arrow { color: #0096c7; }
+[data-color="ocean"] .quiz-start-btn { background: #0096c7; }
+[data-color="ocean"] .quiz-pick-btn--active { border-color: #0096c7; color: #0096c7; background: #e0f4fb; }
+[data-color="ocean"] .quiz-diff-btn--active { border-color: #0096c7; background: #e0f4fb; }
+[data-color="ocean"] .quiz-option--correct { background: #e0f4fb !important; border-color: #0077a3 !important; color: #004e6e !important; }
+[data-color="ocean"] .quiz-feedback--correct { background: #e0f4fb; color: #004e6e; border-left-color: #0096c7; }
+[data-color="ocean"] .quiz-score-live { color: #0096c7; }
+[data-color="ocean"] .quiz-progress-fill { background: linear-gradient(90deg, #0077a3, #48cae4); }
+[data-color="ocean"] .quiz-breakdown-row--correct { border-left-color: #0077a3; }
+[data-color="ocean"] .quiz-breakdown-answer { color: #0096c7; }
+[data-color="ocean"] .share-btn--copied { background: #0096c7 !important; }
+[data-color="ocean"] .htp-option--correct { border-color: #0096c7; background: #e0f4fb; color: #0077a3; }
+
+/* =====================================================
+   COLOR THEME — SUNSET  (coral & purple)
+   Primary: #e07a5f  Hover: #c5624a
+   ===================================================== */
+[data-color="sunset"] .play-btn { background: #e07a5f; }
+[data-color="sunset"] .play-btn:hover { background: #c5624a; }
+[data-color="sunset"] #submit-btn { background: #e07a5f; }
+[data-color="sunset"] #submit-btn:hover { background: #c5624a; }
+[data-color="sunset"] .option-label.selected { border-color: #e07a5f; background: #fff0ec; }
+[data-color="sunset"] .option-label input[type="radio"] { accent-color: #e07a5f; }
+[data-color="sunset"] #result.correct,
+[data-color="sunset"] #result.solved { color: #c5624a; border-color: #e07a5f; background: #fff0ec; }
+[data-color="sunset"] .solved-sub { color: #c5624a; }
+[data-color="sunset"] .timer-done { color: #e07a5f; }
+[data-color="sunset"] .archive-today { background: #e07a5f; }
+[data-color="sunset"] .archive-item--solved { border-color: #e07a5f; background: #fff0ec; }
+[data-color="sunset"] .archive-status--solved { color: #c5624a; }
+[data-color="sunset"] .tab.active { color: #1a1a1b; border-bottom-color: #e07a5f; }
+[data-color="sunset"] .lb-name-submit-btn { background: #e07a5f; }
+[data-color="sunset"] .lb-name-submit-btn:hover { background: #c5624a; }
+[data-color="sunset"] .lb-name-input:focus { border-color: #e07a5f; }
+[data-color="sunset"] .lb-time-cell { color: #c5624a; }
+[data-color="sunset"] .lb-tab--active { background: #e07a5f; border-color: #e07a5f; }
+[data-color="sunset"] .difficulty-badge--easy { background: #e07a5f; }
+[data-color="sunset"] .quiz-tile:hover { border-color: #e07a5f; }
+[data-color="sunset"] .quiz-tile-arrow { color: #e07a5f; }
+[data-color="sunset"] .quiz-start-btn { background: #e07a5f; }
+[data-color="sunset"] .quiz-pick-btn--active { border-color: #e07a5f; color: #e07a5f; background: #fff0ec; }
+[data-color="sunset"] .quiz-diff-btn--active { border-color: #e07a5f; background: #fff0ec; }
+[data-color="sunset"] .quiz-option--correct { background: #fff0ec !important; border-color: #c5624a !important; color: #7a2c1c !important; }
+[data-color="sunset"] .quiz-feedback--correct { background: #fff0ec; color: #7a2c1c; border-left-color: #e07a5f; }
+[data-color="sunset"] .quiz-score-live { color: #e07a5f; }
+[data-color="sunset"] .quiz-progress-fill { background: linear-gradient(90deg, #9b5de5, #e07a5f); }
+[data-color="sunset"] .quiz-breakdown-row--correct { border-left-color: #c5624a; }
+[data-color="sunset"] .quiz-breakdown-answer { color: #e07a5f; }
+[data-color="sunset"] .share-btn--copied { background: #e07a5f !important; }
+[data-color="sunset"] .htp-option--correct { border-color: #e07a5f; background: #fff0ec; color: #c5624a; }
+
+/* =====================================================
+   COLOR THEME — FOREST  (greens & browns)
+   Primary: #4a7c59  Hover: #3a6347
+   ===================================================== */
+[data-color="forest"] .play-btn { background: #4a7c59; }
+[data-color="forest"] .play-btn:hover { background: #3a6347; }
+[data-color="forest"] #submit-btn { background: #4a7c59; }
+[data-color="forest"] #submit-btn:hover { background: #3a6347; }
+[data-color="forest"] .option-label.selected { border-color: #4a7c59; background: #eef5ec; }
+[data-color="forest"] .option-label input[type="radio"] { accent-color: #4a7c59; }
+[data-color="forest"] #result.correct,
+[data-color="forest"] #result.solved { color: #3a6347; border-color: #4a7c59; background: #eef5ec; }
+[data-color="forest"] .solved-sub { color: #3a6347; }
+[data-color="forest"] .timer-done { color: #4a7c59; }
+[data-color="forest"] .archive-today { background: #4a7c59; }
+[data-color="forest"] .archive-item--solved { border-color: #4a7c59; background: #eef5ec; }
+[data-color="forest"] .archive-status--solved { color: #3a6347; }
+[data-color="forest"] .tab.active { color: #1a1a1b; border-bottom-color: #4a7c59; }
+[data-color="forest"] .lb-name-submit-btn { background: #4a7c59; }
+[data-color="forest"] .lb-name-submit-btn:hover { background: #3a6347; }
+[data-color="forest"] .lb-name-input:focus { border-color: #4a7c59; }
+[data-color="forest"] .lb-time-cell { color: #3a6347; }
+[data-color="forest"] .lb-tab--active { background: #4a7c59; border-color: #4a7c59; }
+[data-color="forest"] .difficulty-badge--easy { background: #4a7c59; }
+[data-color="forest"] .quiz-tile:hover { border-color: #4a7c59; }
+[data-color="forest"] .quiz-tile-arrow { color: #4a7c59; }
+[data-color="forest"] .quiz-start-btn { background: #4a7c59; }
+[data-color="forest"] .quiz-pick-btn--active { border-color: #4a7c59; color: #4a7c59; background: #eef5ec; }
+[data-color="forest"] .quiz-diff-btn--active { border-color: #4a7c59; background: #eef5ec; }
+[data-color="forest"] .quiz-option--correct { background: #eef5ec !important; border-color: #3a6347 !important; color: #1a3a22 !important; }
+[data-color="forest"] .quiz-feedback--correct { background: #eef5ec; color: #1a3a22; border-left-color: #4a7c59; }
+[data-color="forest"] .quiz-score-live { color: #4a7c59; }
+[data-color="forest"] .quiz-progress-fill { background: linear-gradient(90deg, #3a6347, #8b5e3c); }
+[data-color="forest"] .quiz-breakdown-row--correct { border-left-color: #3a6347; }
+[data-color="forest"] .quiz-breakdown-answer { color: #4a7c59; }
+[data-color="forest"] .share-btn--copied { background: #4a7c59 !important; }
+[data-color="forest"] .htp-option--correct { border-color: #4a7c59; background: #eef5ec; color: #3a6347; }

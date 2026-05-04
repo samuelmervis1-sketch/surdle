@@ -14,12 +14,18 @@
   <meta property="og:image" content="https://dailysurdle.netlify.app/og-image.svg">
 
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="style.css?v=9">
+  <!-- Anti-FOUC: apply saved prefs before first paint -->
+  <script>!function(){try{var p=JSON.parse(localStorage.getItem('surdle_prefs')||'{}');var h=document.documentElement;if(p.theme==='dark')h.setAttribute('data-theme','dark');if(p.colorTheme&&p.colorTheme!=='default')h.setAttribute('data-color',p.colorTheme);if(p.fontSize&&p.fontSize!=='medium')h.setAttribute('data-font',p.fontSize)}catch(e){}}()</script>
+  <link rel="stylesheet" href="style.css?v=10">
 </head>
 <body class="stats-page">
   <header>
     <button class="how-to-play-btn" id="htp-btn" aria-label="How to play" style="visibility:hidden">?</button>
     <a href="index.html" class="header-back-link">← Home</a>
+    <nav class="header-nav">
+      <a href="settings.html" class="header-nav-link" aria-label="Settings">⚙️</a>
+      <button class="theme-toggle" id="theme-toggle" aria-label="Toggle dark mode">🌙</button>
+    </nav>
     <h1>DailySurdle</h1>
     <p class="subtitle">Your Statistics</p>
   </header>
@@ -122,5 +128,6 @@
   </main>
 
   <script src="stats.js?v=3"></script>
+  <script src="preferences.js?v=1"></script>
 </body>
 </html>

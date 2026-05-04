@@ -13,7 +13,9 @@
   <meta property="og:image" content="https://dailysurdle.netlify.app/og-image.svg">
 
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="style.css?v=9">
+  <!-- Anti-FOUC: apply saved prefs before first paint -->
+  <script>!function(){try{var p=JSON.parse(localStorage.getItem('surdle_prefs')||'{}');var h=document.documentElement;if(p.theme==='dark')h.setAttribute('data-theme','dark');if(p.colorTheme&&p.colorTheme!=='default')h.setAttribute('data-color',p.colorTheme);if(p.fontSize&&p.fontSize!=='medium')h.setAttribute('data-font',p.fontSize)}catch(e){}}()</script>
+  <link rel="stylesheet" href="style.css?v=10">
 </head>
 <body class="challenge-page">
 
@@ -23,6 +25,7 @@
       <span class="challenge-timer" id="challenge-timer">1:00 ⏱️</span>
       <span class="challenge-score" id="challenge-score">Score: 0 ✓</span>
     </div>
+    <a href="settings.html" class="challenge-back-link" style="font-size:1rem;margin-left:auto" aria-label="Settings">⚙️</a>
   </header>
 
   <!-- ===== START SCREEN ===== -->
@@ -89,5 +92,6 @@
   <script src="chemistry-data.js?v=6"></script>
   <script src="biology-data.js?v=5"></script>
   <script src="challenge.js?v=2"></script>
+  <script src="preferences.js?v=1"></script>
 </body>
 </html>

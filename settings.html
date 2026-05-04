@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Settings — DailySurdle</title>
+  <meta name="description" content="Customise DailySurdle: dark mode, colour theme, and text size.">
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://dailysurdle.netlify.app/settings.html">
+  <meta property="og:title" content="Settings — DailySurdle">
+  <meta property="og:image" content="https://dailysurdle.netlify.app/og-image.svg">
+
+  <!-- Anti-FOUC: apply saved prefs before first paint -->
+  <script>!function(){try{var p=JSON.parse(localStorage.getItem('surdle_prefs')||'{}');var h=document.documentElement;if(p.theme==='dark')h.setAttribute('data-theme','dark');if(p.colorTheme&&p.colorTheme!=='default')h.setAttribute('data-color',p.colorTheme);if(p.fontSize&&p.fontSize!=='medium')h.setAttribute('data-font',p.fontSize)}catch(e){}}()</script>
+
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="style.css?v=10">
+</head>
+<body class="settings-page">
+  <header>
+    <a href="index.html" class="header-back-link">← Home</a>
+    <h1>DailySurdle</h1>
+    <p class="subtitle">Settings</p>
+    <nav class="header-nav">
+      <button class="theme-toggle" id="theme-toggle" aria-label="Toggle dark mode">🌙</button>
+    </nav>
+  </header>
+
+  <main>
+
+    <!-- ── Appearance ── -->
+    <section class="settings-section">
+      <h2 class="settings-section-title">Appearance</h2>
+      <div class="settings-row">
+        <div class="settings-row-info">
+          <span class="settings-row-label">Dark Mode</span>
+          <span class="settings-row-sub">Easier on the eyes at night</span>
+        </div>
+        <button class="settings-dark-toggle" id="settings-dark-toggle" aria-pressed="false">
+          <span id="settings-dark-icon">🌙</span>
+          <span id="settings-dark-text">Off</span>
+        </button>
+      </div>
+    </section>
+
+    <!-- ── Color Theme ── -->
+    <section class="settings-section">
+      <h2 class="settings-section-title">Color Theme</h2>
+      <div class="theme-grid" id="theme-grid">
+
+        <button class="theme-card" data-color-theme="default" aria-label="Default theme">
+          <div class="theme-swatches">
+            <span class="swatch" style="background:#6aaa64"></span>
+            <span class="swatch" style="background:#c9a227"></span>
+            <span class="swatch" style="background:#2196f3"></span>
+            <span class="swatch" style="background:#d95f5f"></span>
+          </div>
+          <span class="theme-card-name">Default</span>
+        </button>
+
+        <button class="theme-card" data-color-theme="ocean" aria-label="Ocean theme">
+          <div class="theme-swatches">
+            <span class="swatch" style="background:#0096c7"></span>
+            <span class="swatch" style="background:#48cae4"></span>
+            <span class="swatch" style="background:#023e8a"></span>
+            <span class="swatch" style="background:#ef476f"></span>
+          </div>
+          <span class="theme-card-name">Ocean</span>
+        </button>
+
+        <button class="theme-card" data-color-theme="sunset" aria-label="Sunset theme">
+          <div class="theme-swatches">
+            <span class="swatch" style="background:#e07a5f"></span>
+            <span class="swatch" style="background:#9b5de5"></span>
+            <span class="swatch" style="background:#f9c74f"></span>
+            <span class="swatch" style="background:#ef476f"></span>
+          </div>
+          <span class="theme-card-name">Sunset</span>
+        </button>
+
+        <button class="theme-card" data-color-theme="forest" aria-label="Forest theme">
+          <div class="theme-swatches">
+            <span class="swatch" style="background:#4a7c59"></span>
+            <span class="swatch" style="background:#8b5e3c"></span>
+            <span class="swatch" style="background:#2d6a2d"></span>
+            <span class="swatch" style="background:#c45f45"></span>
+          </div>
+          <span class="theme-card-name">Forest</span>
+        </button>
+
+      </div>
+    </section>
+
+    <!-- ── Text Size ── -->
+    <section class="settings-section">
+      <h2 class="settings-section-title">Text Size</h2>
+      <div class="font-size-row" id="font-size-row">
+        <button class="font-size-btn" data-font-size="small" aria-label="Small text">
+          <span class="font-size-letter">A</span>
+          <span class="font-size-label">Small</span>
+        </button>
+        <button class="font-size-btn" data-font-size="medium" aria-label="Medium text">
+          <span class="font-size-letter">A</span>
+          <span class="font-size-label">Medium</span>
+        </button>
+        <button class="font-size-btn" data-font-size="large" aria-label="Large text">
+          <span class="font-size-letter">A</span>
+          <span class="font-size-label">Large</span>
+        </button>
+      </div>
+    </section>
+
+    <!-- ── About ── -->
+    <section class="settings-section">
+      <div class="settings-about">
+        <strong>DailySurdle</strong>
+        All settings are stored locally in your browser and never leave your device.
+      </div>
+    </section>
+
+  </main>
+
+  <script src="preferences.js?v=1"></script>
+  <script src="settings.js?v=1"></script>
+</body>
+</html>
