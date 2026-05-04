@@ -50,6 +50,54 @@ function setPlayState(subject, dateStr, difficulty, solved, timeSecs) {
   localStorage.setItem(`surdle_${subject}_${dateStr}`, JSON.stringify(data));
 }
 
+// ---- Share helpers ----
+function getPuzzleNumber() {
+  const epoch = new Date('2026-01-01T00:00:00');
+  const now   = new Date();
+  const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  return Math.floor((today - epoch) / 86400000) + 1;
+}
+
+function getSubjectEmoji(subj) {
+  return subj === 'physics' ? '⚡' : subj === 'chemistry' ? '⚗️' : '🧬';
+}
+
+function buildShareText(subj, difficulty, timeSecs, streak) {
+  const num      = getPuzzleNumber();
+  const emoji    = getSubjectEmoji(subj);
+  const label    = subj.charAt(0).toUpperCase() + subj.slice(1);
+  const diffLbl  = difficulty.charAt(0).toUpperCase() + difficulty.slice(1);
+  const timeStr  = (timeSecs != null && timeSecs > 0) ? formatTime(timeSecs) : '—';
+  const streakLn = streak > 0 ? `Streak: ${streak} days 🔥\n` : '';
+  return (
+    `DailySurdle #${num} — ${label} ${emoji}\n` +
+    `Difficulty: ${diffLbl}\n` +
+    `Time: ${timeStr}\n` +
+    `${streakLn}\n` +
+    `Can you beat my time?\n` +
+    `https://dailysurdle.netlify.app`
+  );
+}
+
+async function copyToClipboard(text) {
+  try {
+    await navigator.clipboard.writeText(text);
+    return true;
+  } catch {
+    // Fallback for older / non-secure contexts
+    try {
+      const ta = document.createElement('textarea');
+      ta.value = text;
+      ta.style.cssText = 'position:fixed;opacity:0;pointer-events:none';
+      document.body.appendChild(ta);
+      ta.focus(); ta.select();
+      const ok = document.execCommand('copy');
+      document.body.removeChild(ta);
+      return ok;
+    } catch { return false; }
+  }
+}
+
 // ---- Leaderboard helpers ----
 function formatTime(secs) {
   const m = Math.floor(secs / 60);
@@ -766,6 +814,25 @@ if (submitBtn) { try {
       resultEl.appendChild(learnBtn);
       resultEl.appendChild(learnPanel);
     }
+
+    // Share button
+    const shareBtn = document.createElement('button');
+    shareBtn.className = 'share-btn';
+    shareBtn.textContent = 'Share Results 📤';
+    shareBtn.addEventListener('click', async () => {
+      const state   = getPlayState(subject, todayStr);
+      const timeSecs = state?.timeSecs ?? null;
+      const streak  = getActiveStreak(getStats());
+      const text    = buildShareText(subject, chosenDifficulty, timeSecs, streak);
+      const ok      = await copyToClipboard(text);
+      shareBtn.textContent = ok ? 'Copied to clipboard! ✓' : 'Could not copy — try again';
+      shareBtn.classList.add(ok ? 'share-btn--copied' : 'share-btn--error');
+      setTimeout(() => {
+        shareBtn.textContent = 'Share Results 📤';
+        shareBtn.classList.remove('share-btn--copied', 'share-btn--error');
+      }, 2500);
+    });
+    resultEl.appendChild(shareBtn);
   }
 
   // --- Submit ---

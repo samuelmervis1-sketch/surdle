@@ -1402,6 +1402,36 @@ body.stats-page main {
   text-decoration: underline;
 }
 
+/* ===== Share button ===== */
+.share-btn {
+  display: block;
+  width: 100%;
+  margin-top: 14px;
+  padding: 13px 20px;
+  background: #1a1a2e;
+  color: #fff;
+  font-size: 1rem;
+  font-weight: 700;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  letter-spacing: 0.03em;
+  transition: background 0.15s, transform 0.1s;
+}
+.share-btn:hover {
+  background: #16213e;
+  transform: translateY(-1px);
+}
+.share-btn:active {
+  transform: translateY(0);
+}
+.share-btn--copied {
+  background: #538d4e !important;
+}
+.share-btn--error {
+  background: #c0392b !important;
+}
+
 /* ===== Animations ===== */
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(6px); }
