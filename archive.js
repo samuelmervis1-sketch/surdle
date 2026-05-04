@@ -91,6 +91,17 @@ function difficultyBadgeHTML(difficulty, extraClass) {
   return `<span class="difficulty-badge difficulty-badge--${difficulty}${cls}">${difficulty}</span>`;
 }
 
+function getPlayState(subject, dateStr) {
+  const raw = localStorage.getItem(`surdle_${subject}_${dateStr}`);
+  if (!raw) return null;
+  if (raw === 'solved') return { difficulty: null, solved: true };
+  try { return JSON.parse(raw); } catch { return null; }
+}
+
+function setPlayState(subject, dateStr, difficulty, solved) {
+  localStorage.setItem(`surdle_${subject}_${dateStr}`, JSON.stringify({ difficulty, solved }));
+}
+
 const MONTH_NAMES = [
   'January','February','March','April','May','June',
   'July','August','September','October','November','December'
@@ -120,15 +131,17 @@ function seedForDate(dateStr) {
 }
 
 function getQuestion(subject, dateStr) {
-  const qs   = SUBJECT_DATA[subject].questions;
-  const seed = seedForDate(dateStr);
-  const diff = computeDifficulty(seed);
-  const pool = qs.filter(q => q.difficulty === diff);
+  const qs    = SUBJECT_DATA[subject].questions;
+  const seed  = seedForDate(dateStr);
+  const state = getPlayState(subject, dateStr);
+  const diff  = (state && state.difficulty) ? state.difficulty : computeDifficulty(seed);
+  const pool  = qs.filter(q => q.difficulty === diff);
   return pool.length > 0 ? pool[seed % pool.length] : qs[seed % qs.length];
 }
 
 function isSolved(subject, dateStr) {
-  return localStorage.getItem(`surdle_${subject}_${dateStr}`) === 'solved';
+  const state = getPlayState(subject, dateStr);
+  return state ? state.solved === true : false;
 }
 
 // --- Archive list ---
@@ -139,22 +152,36 @@ function renderList(subject) {
   list.innerHTML = '';
 
   getLast30Days().forEach((dateStr, index) => {
-    const q      = getQuestion(subject, dateStr);
-    const solved = isSolved(subject, dateStr);
+    const state   = getPlayState(subject, dateStr);
+    const solved  = state ? state.solved === true : false;
+    const played  = state && state.difficulty;
     const isToday = index === 0;
+
+    const q = getQuestion(subject, dateStr);
 
     const li = document.createElement('li');
     li.className = 'archive-item' + (solved ? ' archive-item--solved' : '');
 
     const preview = q.text.length > 65 ? q.text.slice(0, 65) + '…' : q.text;
-    const diff    = q.difficulty || computeDifficulty(seedForDate(dateStr));
+    const seed    = seedForDate(dateStr);
+    const diff    = (state && state.difficulty) ? state.difficulty : computeDifficulty(seed);
+
+    let statusClass, statusText;
+    if (solved) {
+      statusClass = 'archive-status--solved';
+      statusText  = '✓ Solved';
+    } else if (played) {
+      statusClass = 'archive-status--inprogress';
+      statusText  = '◑ In progress';
+    } else {
+      statusClass = 'archive-status--unsolved';
+      statusText  = '○ Not played';
+    }
 
     li.innerHTML = `
       <div class="archive-item-meta">
         <span class="archive-date">${formatDate(dateStr)}${isToday ? ' <span class="archive-today">Today</span>' : ''}${difficultyBadgeHTML(diff, 'archive-difficulty')}</span>
-        <span class="archive-status ${solved ? 'archive-status--solved' : 'archive-status--unsolved'}">
-          ${solved ? '✓ Solved' : '○ Not played'}
-        </span>
+        <span class="archive-status ${statusClass}">${statusText}</span>
       </div>
       <p class="archive-preview">${preview}</p>
     `;
@@ -188,7 +215,7 @@ const diagramArea    = document.getElementById('diagram-area');
 const diagramLabels  = document.getElementById('diagram-labels');
 const simulationArea = document.getElementById('simulation-area');
 
-let currentSubject, currentDateStr;
+let currentSubject, currentDateStr, currentDifficulty;
 let hintsShown = 0;
 let _modalSimRunning = false;
 
@@ -350,10 +377,14 @@ function openModal(subject, dateStr) {
   currentSubject = subject;
   currentDateStr = dateStr;
 
+  const state = getPlayState(subject, dateStr);
+  const seed  = seedForDate(dateStr);
+  currentDifficulty = (state && state.difficulty) ? state.difficulty : computeDifficulty(seed);
+
   const q      = getQuestion(subject, dateStr);
   const solved = isSolved(subject, dateStr);
 
-  const diff = q.difficulty || computeDifficulty(seedForDate(dateStr));
+  const diff = currentDifficulty;
   document.getElementById('modal-date').innerHTML =
     formatDate(dateStr) + difficultyBadgeHTML(diff, 'modal-difficulty');
   questionEl.textContent = q.text;
@@ -461,7 +492,7 @@ submitBtn.addEventListener('click', () => {
     });
 
     if (correct === q.correctLabels.length) {
-      localStorage.setItem(`surdle_${currentSubject}_${currentDateStr}`, 'solved');
+      setPlayState(currentSubject, currentDateStr, currentDifficulty, true);
       lockModal();
       showModalResult(true);
       renderList(activeSubject);
@@ -499,7 +530,7 @@ submitBtn.addEventListener('click', () => {
         _modalSimRunning = false;
         const margin = Math.abs(prediction - actualTime) / actualTime;
         if (margin <= 0.10) {
-          localStorage.setItem(`surdle_${currentSubject}_${currentDateStr}`, 'solved');
+          setPlayState(currentSubject, currentDateStr, currentDifficulty, true);
           lockModal();
           showModalResult(true);
           renderList(activeSubject);
@@ -524,7 +555,7 @@ submitBtn.addEventListener('click', () => {
     if (!selected) return;
 
     if (Number(selected.value) === q.correct) {
-      localStorage.setItem(`surdle_${currentSubject}_${currentDateStr}`, 'solved');
+      setPlayState(currentSubject, currentDateStr, currentDifficulty, true);
       lockModal();
       showModalResult(true);
       renderList(activeSubject);

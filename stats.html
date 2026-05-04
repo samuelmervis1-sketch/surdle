@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Stats — DailySurdle</title>
+  <meta name="description" content="Your DailySurdle statistics: streaks, puzzles solved, win rate, and breakdowns by subject and difficulty.">
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://dailysurdle.netlify.app/stats.html">
+  <meta property="og:title" content="Stats — DailySurdle">
+  <meta property="og:description" content="Track your DailySurdle streaks and solving stats.">
+  <meta property="og:image" content="https://dailysurdle.netlify.app/og-image.svg">
+
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="style.css?v=5">
+</head>
+<body class="stats-page">
+  <header>
+    <button class="how-to-play-btn" id="htp-btn" aria-label="How to play" style="visibility:hidden">?</button>
+    <a href="index.html" class="header-back-link">← Home</a>
+    <h1>DailySurdle</h1>
+    <p class="subtitle">Your Statistics</p>
+  </header>
+
+  <main id="stats-page-root">
+
+    <!-- Streak row -->
+    <div class="stats-streak-row">
+      <div class="stats-streak-card stats-streak-card--current">
+        <div class="stats-streak-icon" id="stat-flame">🔥</div>
+        <div class="stats-streak-num" id="stat-streak">0</div>
+        <div class="stats-streak-lbl">Current Streak</div>
+      </div>
+      <div class="stats-streak-card">
+        <div class="stats-streak-icon">🏆</div>
+        <div class="stats-streak-num" id="stat-best">0</div>
+        <div class="stats-streak-lbl">Best Streak</div>
+      </div>
+    </div>
+
+    <!-- Summary cards -->
+    <div class="stats-summary-grid">
+      <div class="stat-card">
+        <div class="stat-card-num" id="stat-total">0</div>
+        <div class="stat-card-lbl">Puzzles Solved</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-card-num" id="stat-winrate">0%</div>
+        <div class="stat-card-lbl">First-Try Wins</div>
+      </div>
+      <div class="stat-card stat-card--wide">
+        <div class="stat-card-num stat-card-num--fav" id="stat-fav">—</div>
+        <div class="stat-card-lbl">Favourite Subject</div>
+      </div>
+    </div>
+
+    <!-- By Subject -->
+    <section class="stats-section">
+      <h2 class="stats-section-title">By Subject</h2>
+      <div id="subject-bars" class="stat-bars"></div>
+    </section>
+
+    <!-- By Difficulty -->
+    <section class="stats-section">
+      <h2 class="stats-section-title">By Difficulty</h2>
+      <div id="diff-bars" class="stat-bars"></div>
+    </section>
+
+    <!-- Reset -->
+    <div class="stats-reset-wrap">
+      <button id="reset-btn" class="stats-reset-btn">Reset All Stats</button>
+      <div id="reset-confirm" class="stats-reset-confirm" hidden>
+        <p>This will permanently erase all your statistics. This can't be undone.</p>
+        <div class="stats-reset-confirm-btns">
+          <button id="reset-cancel" class="stats-reset-cancel-btn">Cancel</button>
+          <button id="reset-confirm-btn" class="stats-reset-destroy-btn">Yes, Reset Everything</button>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <script src="stats.js?v=1"></script>
+</body>
+</html>

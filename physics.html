@@ -20,12 +20,12 @@
   <meta name="twitter:image" content="https://dailysurdle.netlify.app/og-image.svg">
 
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="style.css?v=4">
+  <link rel="stylesheet" href="style.css?v=5">
 </head>
 <body>
   <header>
     <button class="how-to-play-btn" id="htp-btn" aria-label="How to play">?</button>
-    <a href="archive.html" class="header-archive-link">Archive</a>
+    <nav class="header-nav"><a href="stats.html" class="header-nav-link">Stats</a><a href="archive.html" class="header-nav-link">Archive</a></nav>
     <h1>Daily Physics</h1>
     <p class="subtitle">Mechanics &amp; Motion</p>
   </header>
@@ -57,7 +57,7 @@
       </div>
       <div class="htp-section">
         <h3>Difficulty</h3>
-        <p>Each puzzle is tagged <span class="difficulty-badge difficulty-badge--easy">easy</span>, <span class="difficulty-badge difficulty-badge--medium">medium</span>, or <span class="difficulty-badge difficulty-badge--hard">hard</span> — determined by the date, so it rotates automatically.</p>
+        <p>You choose your difficulty before each puzzle: <span class="difficulty-badge difficulty-badge--beginner">beginner</span>, <span class="difficulty-badge difficulty-badge--easy">easy</span>, <span class="difficulty-badge difficulty-badge--medium">medium</span>, or <span class="difficulty-badge difficulty-badge--hard">hard</span>. One choice per subject per day.</p>
       </div>
       <div class="htp-section">
         <h3>Hints</h3>
@@ -80,7 +80,39 @@
     </div>
   </div>
 
-  <script src="physics-data.js?v=3"></script>
-  <script src="script.js?v=3"></script>
+  <div id="diff-selector" class="diff-selector-backdrop" role="dialog" aria-modal="true" aria-label="Choose difficulty">
+    <div class="diff-selector-panel">
+      <div class="diff-selector-header">
+        <h2 class="diff-selector-title">Choose Your Level</h2>
+        <a href="index.html" class="diff-selector-close" aria-label="Back to home">✕</a>
+      </div>
+      <p class="diff-selector-sub">Pick once — you can't change after you start</p>
+      <div class="diff-selector-buttons">
+        <button class="diff-btn diff-btn--beginner" data-diff="beginner">
+          <span class="diff-btn-name">Beginner</span>
+          <span class="diff-btn-stars">⭐☆☆☆</span>
+          <span class="diff-btn-desc">Start here</span>
+        </button>
+        <button class="diff-btn diff-btn--easy" data-diff="easy">
+          <span class="diff-btn-name">Easy</span>
+          <span class="diff-btn-stars">⭐⭐☆☆</span>
+          <span class="diff-btn-desc">Perfect for warm-ups</span>
+        </button>
+        <button class="diff-btn diff-btn--medium" data-diff="medium">
+          <span class="diff-btn-name">Medium</span>
+          <span class="diff-btn-stars">⭐⭐⭐☆</span>
+          <span class="diff-btn-desc">Balanced challenge</span>
+        </button>
+        <button class="diff-btn diff-btn--hard" data-diff="hard">
+          <span class="diff-btn-name">Hard</span>
+          <span class="diff-btn-stars">⭐⭐⭐⭐</span>
+          <span class="diff-btn-desc">Expert level</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script src="physics-data.js?v=5"></script>
+  <script src="script.js?v=6"></script>
 </body>
 </html>

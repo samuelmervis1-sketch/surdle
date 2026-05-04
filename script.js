@@ -31,10 +31,93 @@ function difficultyBadgeHTML(difficulty, extraClass) {
   return `<span class="difficulty-badge difficulty-badge--${difficulty}${cls}">${difficulty}</span>`;
 }
 
-function getQuestionForSeed(questions, seed) {
-  const difficulty = computeDifficulty(seed);
-  const pool = questions.filter(q => q.difficulty === difficulty);
+function getQuestionForSeed(questions, seed, difficulty) {
+  const diff = difficulty || computeDifficulty(seed);
+  const pool = questions.filter(q => q.difficulty === diff);
   return pool.length > 0 ? pool[seed % pool.length] : questions[seed % questions.length];
+}
+
+function getPlayState(subject, dateStr) {
+  const raw = localStorage.getItem(`surdle_${subject}_${dateStr}`);
+  if (!raw) return null;
+  if (raw === 'solved') return { difficulty: null, solved: true };
+  try { return JSON.parse(raw); } catch { return null; }
+}
+
+function setPlayState(subject, dateStr, difficulty, solved) {
+  localStorage.setItem(`surdle_${subject}_${dateStr}`, JSON.stringify({ difficulty, solved }));
+}
+
+// ---- Stats ----
+// getStats / saveStats / getPrevDay are defined in stats.js
+// (stats.js is loaded on stats.html; for game/home pages we define
+//  minimal inline versions here so recordSolve always works)
+if (typeof getStats === 'undefined') {
+  window.getStats = function () {
+    const raw = localStorage.getItem('surdle_stats');
+    const def = {
+      totalSolved:0, currentStreak:0, bestStreak:0, lastSolvedDate:null,
+      bySubject:{physics:0,chemistry:0,biology:0},
+      byDifficulty:{beginner:0,easy:0,medium:0,hard:0},
+      firstTryWins:0
+    };
+    if (!raw) return def;
+    try {
+      const p = JSON.parse(raw);
+      return { ...def, ...p,
+        bySubject:   { ...def.bySubject,   ...(p.bySubject   || {}) },
+        byDifficulty:{ ...def.byDifficulty,...(p.byDifficulty|| {}) }
+      };
+    } catch { return def; }
+  };
+}
+if (typeof saveStats === 'undefined') {
+  window.saveStats = function (s) {
+    localStorage.setItem('surdle_stats', JSON.stringify(s));
+  };
+}
+if (typeof getPrevDay === 'undefined') {
+  window.getPrevDay = function (dateStr) {
+    const d = new Date(dateStr + 'T12:00:00');
+    d.setDate(d.getDate() - 1);
+    return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+  };
+}
+if (typeof getActiveStreak === 'undefined') {
+  window.getActiveStreak = function (stats) {
+    if (!stats.lastSolvedDate || !stats.currentStreak) return 0;
+    const today = getTodayStr();
+    const yesterday = getPrevDay(today);
+    return (stats.lastSolvedDate === today || stats.lastSolvedDate === yesterday)
+      ? stats.currentStreak : 0;
+  };
+}
+
+function recordSolve(subject, difficulty, isFirstTry) {
+  const stats = getStats();
+  const today = getTodayStr();
+
+  // Update counts
+  stats.totalSolved = (stats.totalSolved || 0) + 1;
+  stats.bySubject[subject]      = (stats.bySubject[subject]      || 0) + 1;
+  stats.byDifficulty[difficulty]= (stats.byDifficulty[difficulty]|| 0) + 1;
+  if (isFirstTry) stats.firstTryWins = (stats.firstTryWins || 0) + 1;
+
+  // Update streak (only once per day, regardless of how many puzzles solved)
+  if (stats.lastSolvedDate !== today) {
+    const yesterday = getPrevDay(today);
+    if (stats.lastSolvedDate === yesterday) {
+      stats.currentStreak = (stats.currentStreak || 0) + 1;
+    } else {
+      stats.currentStreak = 1;
+    }
+    stats.lastSolvedDate = today;
+    if (stats.currentStreak > (stats.bestStreak || 0)) {
+      stats.bestStreak = stats.currentStreak;
+    }
+  }
+
+  saveStats(stats);
 }
 
 // --- How to Play modal ---
@@ -56,6 +139,34 @@ const countdownEl = document.getElementById('countdown');
 if (countdownEl) {
   startCountdown(countdownEl);
 
+  // ---- Streak banner ----
+  (function () {
+    const streakBanner = document.getElementById('streak-banner');
+    if (!streakBanner) return;
+    const stats        = getStats();
+    const active       = getActiveStreak(stats);
+    const countEl      = document.getElementById('streak-count');
+    const bestCountEl  = document.getElementById('streak-best-count');
+    const flameEl      = document.getElementById('streak-flame');
+
+    if (countEl)     countEl.textContent     = active;
+    if (bestCountEl) bestCountEl.textContent = stats.bestStreak || 0;
+
+    if (active > 0) {
+      streakBanner.classList.add('has-streak');
+      if (flameEl) flameEl.classList.add('is-burning');
+    }
+
+    // "at risk" if last solve was yesterday (haven't solved today yet)
+    const today     = getTodayStr();
+    const yesterday = getPrevDay(today);
+    if (active > 0 && stats.lastSolvedDate === yesterday) {
+      streakBanner.classList.add('at-risk');
+    }
+
+    streakBanner.hidden = false;
+  })();
+
   // Show today's difficulty badge on each game tile
   const d = new Date();
   const seed = d.getFullYear() * 10000 + (d.getMonth() + 1) * 100 + d.getDate();
@@ -66,16 +177,68 @@ if (countdownEl) {
     { subject: 'biology',   questions: typeof BIOLOGY_QUESTIONS   !== 'undefined' ? BIOLOGY_QUESTIONS   : null },
   ];
 
+  const todayStr = getTodayStr();
   document.querySelectorAll('[data-subject]').forEach(tile => {
     const entry = tileData.find(t => t.subject === tile.dataset.subject);
-    if (!entry || !entry.questions) return;
-    const difficulty = computeDifficulty(seed);
+    if (!entry) return;
+    const state = getPlayState(entry.subject, todayStr);
     const badgeWrap = document.createElement('div');
     badgeWrap.className = 'game-tile-difficulty';
-    badgeWrap.innerHTML = difficultyBadgeHTML(difficulty, '');
+    if (state && state.difficulty) {
+      badgeWrap.innerHTML = difficultyBadgeHTML(state.difficulty, '') +
+        (state.solved ? ' <span class="tile-solved-check">✓</span>' : '');
+    } else {
+      badgeWrap.innerHTML = '<span class="tile-choose-level">Choose your level</span>';
+    }
     const info = tile.querySelector('.game-tile-info');
     if (info) info.appendChild(badgeWrap);
   });
+
+  // --- Intercept Play buttons to show difficulty selector on home page ---
+  const homeDiffSelector = document.getElementById('diff-selector');
+  if (homeDiffSelector) {
+    const subjectUrls = { physics: 'physics.html', chemistry: 'chemistry.html', biology: 'biology.html' };
+    let pendingSubject = null;
+
+    function openHomeSelector(subject) {
+      pendingSubject = subject;
+      homeDiffSelector.classList.add('is-open');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeHomeSelector() {
+      homeDiffSelector.classList.remove('is-open');
+      document.body.style.overflow = '';
+      pendingSubject = null;
+    }
+
+    document.querySelectorAll('[data-subject] .play-btn').forEach(btn => {
+      btn.addEventListener('click', e => {
+        e.preventDefault();
+        const tile = btn.closest('[data-subject]');
+        openHomeSelector(tile.dataset.subject);
+      });
+    });
+
+    homeDiffSelector.querySelectorAll('.diff-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        if (!pendingSubject) return;
+        const diff = btn.dataset.diff;
+        const existing = getPlayState(pendingSubject, todayStr);
+        // Only update state if not already solved (don't overwrite a completed puzzle)
+        if (!existing || !existing.solved) {
+          setPlayState(pendingSubject, todayStr, diff, false);
+        }
+        window.location.href = subjectUrls[pendingSubject];
+      });
+    });
+
+    document.getElementById('diff-selector-close').addEventListener('click', closeHomeSelector);
+    homeDiffSelector.addEventListener('click', e => { if (e.target === homeDiffSelector) closeHomeSelector(); });
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape' && homeDiffSelector.classList.contains('is-open')) closeHomeSelector();
+    });
+  }
 }
 
 // --- SVG definitions for diagram questions ---
@@ -260,48 +423,28 @@ if (submitBtn) { try {
     typeof CHEMISTRY_QUESTIONS !== 'undefined' ? 'chemistry' :
     'biology';
 
-  const questionEl    = document.getElementById('question');
-  const optionsEl     = document.getElementById('options');
-  const resultEl      = document.getElementById('result');
-  const hintBtn       = document.getElementById('hint-btn');
-  const hintBox       = document.getElementById('hint-box');
-  const diagramArea   = document.getElementById('diagram-area');
-  const diagramLabels = document.getElementById('diagram-labels');
+  const questionEl     = document.getElementById('question');
+  const optionsEl      = document.getElementById('options');
+  const resultEl       = document.getElementById('result');
+  const hintBtn        = document.getElementById('hint-btn');
+  const hintBox        = document.getElementById('hint-box');
+  const diagramArea    = document.getElementById('diagram-area');
+  const diagramLabels  = document.getElementById('diagram-labels');
   const simulationArea = document.getElementById('simulation-area');
+  const diffSelectorEl = document.getElementById('diff-selector');
 
   const todayStr   = getTodayStr();
   const storageKey = `surdle_${subject}_${todayStr}`;
+  const d          = new Date();
+  const seed       = d.getFullYear() * 10000 + (d.getMonth() + 1) * 100 + d.getDate();
+  const testIdx    = new URLSearchParams(window.location.search).get('q');
 
-  const d       = new Date();
-  const seed    = d.getFullYear() * 10000 + (d.getMonth() + 1) * 100 + d.getDate();
-  const testIdx = new URLSearchParams(window.location.search).get('q');
-  const q       = testIdx !== null
-    ? QUESTIONS[Number(testIdx) % QUESTIONS.length]
-    : getQuestionForSeed(QUESTIONS, seed);
-
-  // --- Reveal question (hide spinner) ---
-  const loadingEl = document.getElementById('game-loading');
-  if (loadingEl) loadingEl.style.display = 'none';
-  questionEl.hidden = false;
-  hintBtn.hidden = false;
-  submitBtn.hidden = false;
-
-  // --- Render question ---
-  questionEl.textContent = q.text;
-  if (q.difficulty) {
-    const badge = document.createElement('div');
-    badge.style.marginTop = '6px';
-    badge.innerHTML = difficultyBadgeHTML(q.difficulty, '');
-    questionEl.insertAdjacentElement('afterend', badge);
-  }
-
-  if (q.type === 'diagram') {
-    renderDiagram(q);
-  } else if (q.type === 'simulation') {
-    renderSimulation(q);
-  } else {
-    renderMCQ(q);
-  }
+  let q                = null;
+  let chosenDifficulty = null;
+  let hintsShown       = 0;
+  let _simRunning      = false;
+  let _simAnimFrame    = null;
+  let attemptCount     = 0;   // tracks submit clicks this session
 
   // ---- MCQ ----
   function renderMCQ(question) {
@@ -355,9 +498,6 @@ if (submitBtn) { try {
   }
 
   // ---- Simulation ----
-  let _simRunning = false;
-  let _simAnimFrame = null;
-
   function renderSimulation(question) {
     if (!simulationArea) return;
     simulationArea.innerHTML = `
@@ -384,7 +524,6 @@ if (submitBtn) { try {
     optionsEl.hidden = true;
     submitBtn.textContent = 'Run Simulation';
 
-    // Draw initial state after layout
     requestAnimationFrame(() => {
       const canvas = document.getElementById('sim-canvas');
       if (canvas) drawSimCanvas(canvas, question.height, 0, false);
@@ -392,9 +531,8 @@ if (submitBtn) { try {
   }
 
   // --- Hints ---
-  let hintsShown = 0;
   hintBtn.addEventListener('click', () => {
-    if (hintsShown >= q.hints.length) return;
+    if (!q || hintsShown >= q.hints.length) return;
     hintsShown++;
     hintBox.hidden = false;
     hintBox.innerHTML = q.hints
@@ -464,27 +602,11 @@ if (submitBtn) { try {
     }
   }
 
-  // --- Restore solved state ---
-  if (localStorage.getItem(storageKey) === 'solved') {
-    if (q.type === 'diagram') {
-      document.querySelectorAll('.diagram-select').forEach((sel, i) => {
-        sel.value = q.correctLabels[i];
-        sel.closest('.diagram-label-row').classList.add('correct');
-      });
-    } else if (q.type === 'simulation') {
-      const actualTime = Math.sqrt(2 * q.height / 9.8);
-      requestAnimationFrame(() => {
-        const canvas = document.getElementById('sim-canvas');
-        if (canvas) drawSimCanvas(canvas, q.height, actualTime, true);
-      });
-    }
-    lockPuzzle();
-    showSolvedState();
-  }
-
   // --- Submit ---
   submitBtn.addEventListener('click', () => {
+    if (!q) return;
     if (q.type === 'diagram') {
+      attemptCount++;
       const selects = document.querySelectorAll('.diagram-select');
       let correct = 0;
       selects.forEach((sel, i) => {
@@ -494,7 +616,8 @@ if (submitBtn) { try {
         else row.classList.add('wrong');
       });
       if (correct === q.correctLabels.length) {
-        localStorage.setItem(storageKey, 'solved');
+        recordSolve(subject, chosenDifficulty, attemptCount === 1);
+        setPlayState(subject, todayStr, chosenDifficulty, true);
         lockPuzzle(); showSolvedState();
       } else {
         resultEl.hidden = false; resultEl.className = 'wrong';
@@ -511,6 +634,7 @@ if (submitBtn) { try {
         return;
       }
       predInput.style.outline = '';
+      attemptCount++;
 
       _simRunning = true;
       submitBtn.disabled = true;
@@ -529,7 +653,8 @@ if (submitBtn) { try {
           _simRunning = false;
           const margin = Math.abs(prediction - actualTime) / actualTime;
           if (margin <= 0.10) {
-            localStorage.setItem(storageKey, 'solved');
+            recordSolve(subject, chosenDifficulty, attemptCount === 1);
+            setPlayState(subject, todayStr, chosenDifficulty, true);
             lockPuzzle(); showSolvedState();
           } else {
             submitBtn.disabled = false;
@@ -547,10 +672,12 @@ if (submitBtn) { try {
       _simAnimFrame = requestAnimationFrame(simFrame);
 
     } else {
+      attemptCount++;
       const selected = document.querySelector('input[name="answer"]:checked');
-      if (!selected) return;
+      if (!selected) { attemptCount--; return; }
       if (Number(selected.value) === q.correct) {
-        localStorage.setItem(storageKey, 'solved');
+        recordSolve(subject, chosenDifficulty, attemptCount === 1);
+        setPlayState(subject, todayStr, chosenDifficulty, true);
         lockPuzzle(); showSolvedState();
       } else {
         resultEl.hidden = false; resultEl.className = 'wrong';
@@ -558,6 +685,84 @@ if (submitBtn) { try {
       }
     }
   });
+
+  // --- Start game with a chosen difficulty ---
+  function initGame(difficulty) {
+    chosenDifficulty = difficulty;
+
+    q = testIdx !== null
+      ? QUESTIONS[Number(testIdx) % QUESTIONS.length]
+      : getQuestionForSeed(QUESTIONS, seed, difficulty);
+
+    if (diffSelectorEl) {
+      diffSelectorEl.classList.remove('is-open');
+      document.body.style.overflow = '';
+    }
+
+    const loadingEl = document.getElementById('game-loading');
+    if (loadingEl) loadingEl.style.display = 'none';
+    questionEl.hidden = false;
+    hintBtn.hidden = false;
+    submitBtn.hidden = false;
+
+    questionEl.textContent = q.text;
+    if (q.difficulty) {
+      const badge = document.createElement('div');
+      badge.style.marginTop = '6px';
+      badge.innerHTML = difficultyBadgeHTML(q.difficulty, '');
+      questionEl.insertAdjacentElement('afterend', badge);
+    }
+
+    if (q.type === 'diagram') renderDiagram(q);
+    else if (q.type === 'simulation') renderSimulation(q);
+    else renderMCQ(q);
+
+    // Restore solved state if already completed
+    const state = getPlayState(subject, todayStr);
+    if (state && state.solved) {
+      if (q.type === 'diagram') {
+        document.querySelectorAll('.diagram-select').forEach((sel, i) => {
+          sel.value = q.correctLabels[i];
+          sel.closest('.diagram-label-row').classList.add('correct');
+        });
+      } else if (q.type === 'simulation') {
+        const actualTime = Math.sqrt(2 * q.height / 9.8);
+        requestAnimationFrame(() => {
+          const canvas = document.getElementById('sim-canvas');
+          if (canvas) drawSimCanvas(canvas, q.height, actualTime, true);
+        });
+      }
+      lockPuzzle();
+      showSolvedState();
+    }
+  }
+
+  // --- Entry point ---
+  const existingState = getPlayState(subject, todayStr);
+
+  if (testIdx !== null) {
+    // Test mode bypasses selector
+    initGame('medium');
+  } else if (existingState && existingState.difficulty) {
+    // Already chose difficulty today — go straight to puzzle
+    initGame(existingState.difficulty);
+  } else {
+    // Show difficulty selector
+    const loadingEl = document.getElementById('game-loading');
+    if (loadingEl) loadingEl.style.display = 'none';
+    if (diffSelectorEl) {
+      diffSelectorEl.classList.add('is-open');
+      document.body.style.overflow = 'hidden';
+    }
+    document.querySelectorAll('.diff-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const diff = btn.dataset.diff;
+        setPlayState(subject, todayStr, diff, false);
+        initGame(diff);
+      });
+    });
+  }
+
 } catch (err) {
   const container = document.querySelector('.game-container');
   if (container) {
