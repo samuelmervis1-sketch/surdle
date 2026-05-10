@@ -23,6 +23,7 @@
   <!-- Anti-FOUC: apply saved prefs before first paint -->
   <script>!function(){try{var p=JSON.parse(localStorage.getItem('surdle_prefs')||'{}');var h=document.documentElement;if(p.theme==='dark')h.setAttribute('data-theme','dark');if(p.colorTheme&&p.colorTheme!=='default')h.setAttribute('data-color',p.colorTheme);if(p.fontSize&&p.fontSize!=='medium')h.setAttribute('data-font',p.fontSize)}catch(e){}}()</script>
   <link rel="stylesheet" href="style.css?v=10">
+  <script defer src="https://cdn.vercel-insights.com/v1/script.js"></script>
 </head>
 <body>
   <header>
